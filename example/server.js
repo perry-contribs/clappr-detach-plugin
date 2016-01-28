@@ -3,7 +3,7 @@ var path = require('path');
 var app = Express();
 var server;
 
-const PATH_DIST = path.resolve(__dirname, './');
+const PATH_DIST = path.resolve(__dirname, '../dist');
 
 app.use(Express.static(PATH_DIST));
 
