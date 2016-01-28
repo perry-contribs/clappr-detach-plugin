@@ -28,10 +28,13 @@ class DetachPlugin extends Clappr.UICorePlugin {
     this.draggable.init()
   }
 
-  attach() {
+  disablePlayerDrag() {
     this.draggable.destroy()
     this.draggable = null
+  }
 
+  attach() {
+    this.disablePlayerDrag()
     this.playerWrapper().attr('style', this.originalStyle)
     this.$('.detach-button').html('\\/ detach \\/')
   }
