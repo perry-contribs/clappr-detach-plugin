@@ -20,7 +20,12 @@ class DetachPlugin extends Clappr.UICorePlugin {
   }
 
   resizeAndRepositionPlayer(){
-    this.playerWrapper().attr('style',"height: 180px; width: 320px; left: 10px; bottom: 10px;")
+    this.playerWrapper().css({
+      height: '180px',
+      width: '320px',
+      left: '10px',
+      bottom: '10px'
+    })
   }
 
   enablePlayerDrag() {
