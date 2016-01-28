@@ -4,7 +4,7 @@
 class DetachPlugin extends Clappr.UICorePlugin {
   get name() { return 'detach' }
 
-  playerWrapper(){
+  playerWrapper() {
     return this.core.$el
   }
 
@@ -15,16 +15,16 @@ class DetachPlugin extends Clappr.UICorePlugin {
   detach() {
     this.originalStyle = this.playerWrapper().attr('style')
     this.$('.detach-button').html('X attach X')
-    resizePlayeAandMoveToBottomLeft()
-    enablePlayerDrag()
+    this.resizePlayerAndMoveToBottomLeft()
+    this.enablePlayerDrag()
   }
 
-  resizePlayerAndMoveToBottomLeft(){
+  resizePlayerAndMoveToBottomLeft() {
     // playerWrapper.
   }
 
   enablePlayerDrag() {
-    this.draggable = new Drag(playerWrapper())
+    this.draggable = new Drag(this.core.el)
     this.draggable.init()
   }
 
