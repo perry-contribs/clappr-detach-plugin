@@ -24,34 +24,31 @@ class DetachPlugin extends Clappr.UICorePlugin {
     return this.core.containers[0].$el
   }
 
+  toggleDetach() {
+    this.draggable ? this.attach() : this.detach()
+  }
+
   detach() {
-    console.log('detach', this.enableMove)
-    this.enableMove = true
+    this.originalStyle = this.core.$el.attr('style')
+    this.$('.detach-button').html('X attach X')
+
+    this.draggable = new Drag(this.core.el)
+    this.draggable.init()
   }
 
-  tryToMove(e) {
-    console.log('tryToMove', this.enableMove)
-    if (this.enableMove) {
-      this.draggable = new Drag(this.core.el)
-      this.draggable.init()
-      debugger
-
-      this.getContainer().on('mouseup', ::this.unbindDrag)
-    }
-  }
-
-  unbindDrag(e) {
+  attach() {
     this.draggable.destroy()
-    this.getContainer().off('mouseup')
+    this.draggable = null
+
+    this.core.$el.attr('style', this.originalStyle)
+    this.$('.detach-button').html('\\/ detach \\/')
   }
 
   render() {
-    console.log(' render')
-    this.$el.html('Detach')
+    this.$el.html('<span class="detach-button">\\/ Detach \\/</span>')
     this.core.$el.append(this.$el)
 
-    this.$el.on('click', ::this.detach)
-    this.core.$el.on('mousedown', ::this.tryToMove)
+    this.$el.on('click', ::this.toggleDetach)
 
     return this
   }

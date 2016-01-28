@@ -6,7 +6,7 @@ var Drag = function (element) {
       y: 0
     };
   this.init = function () {
-    el.style.position = "absolute";
+    el.style.position = "fixed";
     this.events();
   };
 
