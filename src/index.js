@@ -17,6 +17,8 @@ class DetachPlugin extends Clappr.UICorePlugin {
     this.$('.detach-button').html('X attach X')
     this.resizeAndRepositionPlayer()
     this.enablePlayerDrag()
+
+    this.addPlaceholder()
   }
 
   resizeAndRepositionPlayer(){
@@ -29,7 +31,7 @@ class DetachPlugin extends Clappr.UICorePlugin {
   }
 
   enablePlayerDrag() {
-    this.draggable = new Drag(this.core.el)
+    this.draggable = new Drag(this.playerWrapper()[0])
     this.draggable.init()
   }
 
@@ -40,8 +42,23 @@ class DetachPlugin extends Clappr.UICorePlugin {
 
   attach() {
     this.disablePlayerDrag()
+    this.removePlaceholder()
+
     this.playerWrapper().attr('style', this.originalStyle)
     this.$('.detach-button').html('\\/ detach \\/')
+  }
+
+  addPlaceholder() {
+    let placeholder = document.createElement('div')
+    placeholder.setAttribute('style', this.originalStyle)
+    placeholder.setAttribute('class', 'video-placeholder')
+    placeholder.style.backgroundColor = 'black'
+
+    this.playerWrapper().parent().prepend(placeholder)
+  }
+
+  removePlaceholder() {
+    this.playerWrapper().siblings('.video-placeholder').remove()
   }
 
   render() {
