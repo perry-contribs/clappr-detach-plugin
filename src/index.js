@@ -4,22 +4,6 @@
 class DetachPlugin extends Clappr.UICorePlugin {
   get name() { return 'detach' }
 
-  constructor(core) {
-    super(core)
-
-    this.enableMove = false
-  }
-
-  // detach(e) {
-  //   new Drag('queen')
-  //   console.log('Drag queen')
-  //   debugger
-  //   var container = this.core.containers[0]
-  //   if (container.hasPlugin('click_to_pause')) {
-  //     container.getPlugin('click_to_pause').disable()
-  //   }
-  // }
-
   getContainer() {
     return this.core.containers[0].$el
   }
