@@ -68,6 +68,4 @@ var Drag = function (element) {
   var _off = function (el, event, fn) {
     document.detachEvent ? el.detachEvent('on' + event, fn) : el.removeEventListener(event, fn, !0);
   };
-
-  // this.init();
 }
