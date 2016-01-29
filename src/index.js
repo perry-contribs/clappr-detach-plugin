@@ -27,26 +27,12 @@ class DetachPlugin extends Clappr.UICorePlugin {
     this.addPlaceholder()
     this.hidePlayer()
     this.enablePlayerDrag()
-    this.showMiniPlayer()
+    this.enableMiniPlayer()
   }
 
   hidePlayer() {
     this.playerWrapper.css({
       opacity: 0
-    })
-  }
-
-  showMiniPlayer() {
-    this.playerWrapper.css({
-      transition: 'opacity 1s ease',
-      transition: 'transform 0.5s ease-in-out',
-      transform: 'translateY(-130px)',
-      opacity: 1,
-      height: '180px',
-      width: '320px',
-      left: '10px',
-      bottom: '-100px',
-      zIndex: '99999'
     })
   }
 
@@ -70,6 +56,20 @@ class DetachPlugin extends Clappr.UICorePlugin {
     this.clickToPausePlugin.disable()
   }
 
+  enableMiniPlayer() {
+    this.hideSeekBar()
+    this.playerWrapper.css({
+      transition: 'opacity 1s ease',
+      transition: 'transform 0.5s ease-in-out',
+      transform: 'translateY(-130px)',
+      opacity: 1,
+      height: '180px',
+      width: '320px',
+      left: '10px',
+      bottom: '-100px',
+      zIndex: '99999'
+    })
+  }
   attach() {
     this.disablePlayerDrag()
     this.removePlaceholder()
