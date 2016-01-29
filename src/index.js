@@ -1,6 +1,3 @@
-// import { UICorePlugin, Events } from 'Clappr'
-
-// export default class DetachPlugin extends UICorePlugin {
 class DetachPlugin extends Clappr.UICorePlugin {
   get name() { return 'detach' }
   get playerWrapper() { return this.core.$el }
@@ -59,6 +56,7 @@ class DetachPlugin extends Clappr.UICorePlugin {
 
   enableMiniPlayer() {
     this.hideSeekBar()
+    this.hideDetachButton()
     this.mediaControl.$('.attach-button').show()
     this.playerWrapper.css({
       transition: 'opacity 1s ease',
@@ -77,13 +75,13 @@ class DetachPlugin extends Clappr.UICorePlugin {
     this.playerWrapper.attr('style', this.originalStyle)
     this.showSeekBar()
     this.mediaControl.$('.attach-button').hide()
+    this.showDetachButton()
   }
 
   attach() {
     this.disablePlayerDrag()
     this.removePlaceholder()
     this.disableMiniPlayer()
-    // this.mediaControl.$('.detach-button').html('\\/ detach \\/')
   }
 
   detach() {
@@ -162,6 +160,14 @@ class DetachPlugin extends Clappr.UICorePlugin {
 
   hideSeekBar() {
     this.seekBarContainer.hide()
+  }
+
+  showDetachButton() {
+    this.$el.show()
+  }
+
+  hideDetachButton(){
+    this.$el.hide()
   }
 
   render() {
