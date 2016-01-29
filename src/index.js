@@ -12,9 +12,11 @@ class DetachPlugin extends Clappr.UICorePlugin {
 
   bindEvents() {
     this.listenTo(this.mediaControl, Clappr.Events.MEDIACONTROL_RENDERED, this.insertButton)
+
+    this.$el.on('click', ::this.toggleDetach)
   }
 
-  playerWrapper(){
+  playerWrapper() {
     return this.core.$el
   }
 
@@ -117,7 +119,7 @@ class DetachPlugin extends Clappr.UICorePlugin {
   }
 
   render() {
-    this.$el.html('<span class="detach-button">\\/ Detach \\/</span>')
+    this.$el.html('\\/ Detach \\/')
     this.$el.css({
       cursor: 'pointer',
       float: 'right',
@@ -125,8 +127,6 @@ class DetachPlugin extends Clappr.UICorePlugin {
       border: 0,
       height: '100%'
     })
-
-    this.$el.on('click', ::this.toggleDetach)
 
     return this
   }
