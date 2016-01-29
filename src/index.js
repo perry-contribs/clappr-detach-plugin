@@ -59,6 +59,7 @@ class DetachPlugin extends Clappr.UICorePlugin {
 
   enableMiniPlayer() {
     this.hideSeekBar()
+    this.mediaControl.$('.attach-button').show()
     this.playerWrapper.css({
       transition: 'opacity 1s ease',
       transition: 'transform 0.5s ease-in-out',
@@ -75,6 +76,7 @@ class DetachPlugin extends Clappr.UICorePlugin {
   disableMiniPlayer() {
     this.playerWrapper.attr('style', this.originalStyle)
     this.showSeekBar()
+    this.mediaControl.$('.attach-button').hide()
   }
 
   attach() {
@@ -134,6 +136,23 @@ class DetachPlugin extends Clappr.UICorePlugin {
   }
 
   insertButton() {
+    let closeButton = document.createElement('div')
+    closeButton.setAttribute('class', 'attach-button')
+    closeButton.style.width = '25px'
+    closeButton.style.height = '25px'
+    closeButton.style.float = 'right'
+    closeButton.style.padding = '5px'
+    closeButton.style.background = 'rgba(0, 0, 0, 0.3)'
+    closeButton.style.borderRadius = '12px'
+    closeButton.style.margin = '5px'
+    closeButton.style.display = 'none'
+
+    closeButton.innerHTML =
+      '<svg width="100%" height="100%" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' +
+        '<path fill="#FFFFFF" d="M5,5.3801199 L0.380119902,10 L4.28101998e-13,9.6198801 L4.6198801,5 L1.40509826e-12,0.380119902 L0.380119902,0 L5,4.6198801 L9.6198801,0 L10,0.380119902 L5.3801199,5 L10,9.6198801 L9.6198801,10 L5,5.3801199 Z"></path>' +
+      '</svg>'
+
+    this.mediaControl.$el.append(closeButton)
     this.mediaControl.$el.find('.media-control-right-panel').append(this.$el)
   }
 
