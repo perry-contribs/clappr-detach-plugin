@@ -6,6 +6,7 @@ class DetachPlugin extends Clappr.UICorePlugin {
   get playerWrapper() { return this.core.$el }
   get mediaControl() { return this.core.mediaControl }
   get clickToPausePlugin() { return this.core.containers[0].getPlugin('click_to_pause') }
+  get seekBarContainer() { return this.mediaControl.$el.find('.media-control-center-panel') }
   get attributes() {
     return {
       'class': 'detach-button'
@@ -118,6 +119,14 @@ class DetachPlugin extends Clappr.UICorePlugin {
 
   insertButton() {
     this.mediaControl.$el.find('.media-control-right-panel').append(this.$el)
+  }
+
+  showSeekBar() {
+    this.seekBarContainer.show()
+  }
+
+  hideSeekBar() {
+    this.seekBarContainer.hide()
   }
 
   render() {
