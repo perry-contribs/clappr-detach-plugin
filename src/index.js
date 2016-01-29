@@ -51,7 +51,8 @@ class DetachPlugin extends Clappr.UICorePlugin {
       height: '180px',
       width: '320px',
       left: '10px',
-      bottom: '-20px'
+      bottom: '-20px',
+      zIndex: '99999'
     })
   }
 
