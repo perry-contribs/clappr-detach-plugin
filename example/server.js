@@ -11,6 +11,7 @@ app.use(Express.static(PATH_EXAMPLE));
 
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, './example.html'));
+  // res.sendFile(path.resolve(__dirname, './g1.html'));
 });
 
 server = app.listen(process.env.PORT || 3000, () => {
