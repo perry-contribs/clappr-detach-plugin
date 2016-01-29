@@ -93,8 +93,13 @@ class DetachPlugin extends Clappr.UICorePlugin {
     placeholder.style.alignItems = 'center'
 
     const button = this.placeholderDetachButton()
-    $(placeholder).append(button)
-    $(button).on('click', ::this.toggleDetach)
+    if (document.attachEvent) {
+      button.attachEvent('onclick', ::this.toggleDetach)
+    } else {
+      button.addEventListener('click', ::this.toggleDetach)
+    }
+
+    placeholder.appendChild(button)
     this.playerWrapper.parent().prepend(placeholder)
   }
 
