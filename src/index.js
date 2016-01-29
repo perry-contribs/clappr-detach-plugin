@@ -70,17 +70,23 @@ class DetachPlugin extends Clappr.UICorePlugin {
       zIndex: '99999'
     })
   }
+
+  disableMiniPlayer() {
+    this.playerWrapper.attr('style', this.originalStyle)
+    this.showSeekBar()
+  }
+
   attach() {
     this.disablePlayerDrag()
     this.removePlaceholder()
-
-    this.playerWrapper.attr('style', this.originalStyle)
+    this.disableMiniPlayer()
     this.mediaControl.$('.detach-button').html('\\/ detach \\/')
   }
 
   detach() {
     this.originalStyle = this.playerWrapper.attr('style')
     this.mediaControl.$('.detach-button').html('X attach X')
+
     this.resizeAndRepositionPlayer()
   }
 
