@@ -7,6 +7,7 @@ class DetachPlugin extends Clappr.UICorePlugin {
   get mediaControl() { return this.core.mediaControl }
   get clickToPausePlugin() { return this.core.containers[0].getPlugin('click_to_pause') }
   get seekBarContainer() { return this.mediaControl.$el.find('.media-control-center-panel') }
+  get poster() { this.core.options.poster ? this.core.options.poster : 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=' }
   get attributes() {
     return {
       'class': 'detach-button'
@@ -80,7 +81,7 @@ class DetachPlugin extends Clappr.UICorePlugin {
     this.disablePlayerDrag()
     this.removePlaceholder()
     this.disableMiniPlayer()
-    this.mediaControl.$('.detach-button').html('\\/ detach \\/')
+    // this.mediaControl.$('.detach-button').html('\\/ detach \\/')
   }
 
   detach() {
@@ -106,8 +107,8 @@ class DetachPlugin extends Clappr.UICorePlugin {
     }
 
     let css = document.createElement('style')
-    let image = this.core.options.poster ? this.core.options.poster : 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
-    css.innerHTML = '.video-placeholder:before { content:""; position:absolute; width:100%; height:100%; background:inherit; z-index:-1; -webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px); top:0; left:0; opacity: 0.85; background-size:100% 100%; background-image:'+ 'url(' + image + ');' +' }'
+    css.class = 'clappr-style'
+    css.innerHTML = '.video-placeholder:before { content:""; position:absolute; width:100%; height:100%; background:inherit; z-index:-1; -webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px); top:0; left:0; opacity: 0.85; background-size:100% 100%; background-image:'+ 'url(' + this.poster + ');' +' }'
 
     placeholder.appendChild(css)
     placeholder.appendChild(button)
@@ -121,7 +122,7 @@ class DetachPlugin extends Clappr.UICorePlugin {
     button.style.cursor = 'pointer'
 
     button.innerHTML =
-      '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 93.08 62" enable-background="new 0 0 93.08 62" xml:space="preserve">' +
+      '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 93.08 62" enable-background="new 0 0 93.08 62" xml:space="preserve">' +
         '<path fill="#FFFFFF" d="M0-0.053V62h93.08V-0.053H0z M89.357,58.349H40.461V34.625H3.727V3.598h85.631V58.349z"/>' +
       '</svg>'
 
@@ -145,13 +146,17 @@ class DetachPlugin extends Clappr.UICorePlugin {
   }
 
   render() {
-    this.$el.html('\\/ Detach \\/')
+    this.$el.html(
+      '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 24 16" enable-background="new 0 0 24 16" xml:space="preserve">' +
+        '<path fill="#FFFFFF" d="M0,0v16h24V0H0z M23.04,15.059H10.433V8.941H0.96v-8h22.08V15.059z"/>' +
+      '</svg>'
+    )
     this.$el.css({
       cursor: 'pointer',
       float: 'right',
-      background: 'white',
       border: 0,
-      height: '100%'
+      height: '100%',
+      width: '6%'
     })
 
     return this
