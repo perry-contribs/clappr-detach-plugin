@@ -85,19 +85,18 @@ class DetachPlugin extends Clappr.UICorePlugin {
 
   detach() {
     this.originalStyle = this.playerWrapper.attr('style')
-    this.mediaControl.$('.detach-button').html('X attach X')
-
     this.resizeAndRepositionPlayer()
   }
 
   addPlaceholder() {
     let placeholder = document.createElement('div')
+
     placeholder.setAttribute('style', this.originalStyle)
     placeholder.setAttribute('class', 'video-placeholder')
-    placeholder.style.backgroundColor = 'black'
     placeholder.style.display = 'flex'
     placeholder.style.justifyContent = 'center'
     placeholder.style.alignItems = 'center'
+    placeholder.style.position = 'relative'
 
     const button = this.placeholderDetachButton()
     if (document.attachEvent) {
@@ -106,6 +105,10 @@ class DetachPlugin extends Clappr.UICorePlugin {
       button.addEventListener('click', ::this.toggleDetach)
     }
 
+    let css = document.createElement('style')
+    css.innerHTML = '.video-placeholder:before { content:""; position:absolute; width:100%; height:100%; background:inherit; z-index:-1; -webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px); top:0; left:0; opacity: 0.8; background-size:100% 100%; background-image:'+ 'url(' + this.core.options.poster + ');' +' }'
+
+    placeholder.appendChild(css)
     placeholder.appendChild(button)
     this.playerWrapper.parent().prepend(placeholder)
   }
@@ -114,8 +117,13 @@ class DetachPlugin extends Clappr.UICorePlugin {
     let button = document.createElement('div')
     button.style.width = '20%'
     button.style.height = '20%'
-    button.style.background = 'white'
     button.style.cursor = 'pointer'
+
+    button.innerHTML =
+      '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 93.08 62" enable-background="new 0 0 93.08 62" xml:space="preserve">' +
+        '<path fill="#FFFFFF" d="M0-0.053V62h93.08V-0.053H0z M89.357,58.349H40.461V34.625H3.727V3.598h85.631V58.349z"/>' +
+      '</svg>'
+
     return button
   }
 
