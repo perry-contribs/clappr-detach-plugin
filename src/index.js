@@ -55,15 +55,24 @@ class DetachPlugin extends Clappr.UICorePlugin {
     })
   }
 
-
   enablePlayerDrag() {
+    this.disablePauseClick()
     this.draggable = new Drag(this.playerWrapper()[0])
     this.draggable.init()
   }
 
   disablePlayerDrag() {
+    this.enablePauseClick()
     this.draggable.destroy()
     this.draggable = null
+  }
+
+  enablePauseClick() {
+    this.core.containers[0].getPlugin('click_to_pause').enable()
+  }
+
+  disablePauseClick() {
+    this.core.containers[0].getPlugin('click_to_pause').disable()
   }
 
   attach() {
