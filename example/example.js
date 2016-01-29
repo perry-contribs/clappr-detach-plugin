@@ -4,6 +4,5 @@ var player = new Clappr.Player({
   parentId: "#player",
   plugins: {
     core: [ DetachPlugin ]
-    // container: [ DetachPlugin ]
   }
 });
