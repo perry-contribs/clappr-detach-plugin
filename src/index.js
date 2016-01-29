@@ -106,7 +106,8 @@ class DetachPlugin extends Clappr.UICorePlugin {
     }
 
     let css = document.createElement('style')
-    css.innerHTML = '.video-placeholder:before { content:""; position:absolute; width:100%; height:100%; background:inherit; z-index:-1; -webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px); top:0; left:0; opacity: 0.8; background-size:100% 100%; background-image:'+ 'url(' + this.core.options.poster + ');' +' }'
+    let image = this.core.options.poster ? this.core.options.poster : 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
+    css.innerHTML = '.video-placeholder:before { content:""; position:absolute; width:100%; height:100%; background:inherit; z-index:-1; -webkit-filter: blur(5px); -moz-filter: blur(5px); -o-filter: blur(5px); -ms-filter: blur(5px); filter: blur(5px); top:0; left:0; opacity: 0.85; background-size:100% 100%; background-image:'+ 'url(' + image + ');' +' }'
 
     placeholder.appendChild(css)
     placeholder.appendChild(button)
