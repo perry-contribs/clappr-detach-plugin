@@ -46,12 +46,12 @@ class DetachPlugin extends Clappr.UICorePlugin {
     this.playerWrapper().css({
       transition: 'opacity 1s ease',
       transition: 'transform 0.5s ease-in-out',
-      transform: 'translateY(-30px)',
+      transform: 'translateY(-130px)',
       opacity: 1,
       height: '180px',
       width: '320px',
       left: '10px',
-      bottom: '-20px',
+      bottom: '-100px',
       zIndex: '99999'
     })
   }
@@ -89,8 +89,23 @@ class DetachPlugin extends Clappr.UICorePlugin {
     placeholder.setAttribute('style', this.originalStyle)
     placeholder.setAttribute('class', 'video-placeholder')
     placeholder.style.backgroundColor = 'black'
+    placeholder.style.display = 'flex'
+    placeholder.style.justifyContent = 'center'
+    placeholder.style.alignItems = 'center'
 
+    const button = this.placeholderDetachButton()
+    $(placeholder).append(button)
+    $(button).on('click', ::this.toggleDetach)
     this.playerWrapper().parent().prepend(placeholder)
+  }
+
+  placeholderDetachButton() {
+    let button = document.createElement('div')
+    button.style.width = '20%'
+    button.style.height = '20%'
+    button.style.background = 'white'
+    button.style.cursor = 'pointer'
+    return button
   }
 
   removePlaceholder() {
