@@ -7,7 +7,7 @@ class DetachPlugin extends Clappr.UICorePlugin {
   get mediaControl() { return this.core.mediaControl }
   get clickToPausePlugin() { return this.core.containers[0].getPlugin('click_to_pause') }
   get seekBarContainer() { return this.mediaControl.$el.find('.media-control-center-panel') }
-  get poster() { this.core.options.poster ? this.core.options.poster : 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=' }
+  get poster() { return this.core.options.poster ? this.core.options.poster : 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=' }
   get attributes() {
     return {
       'class': 'detach-button'
