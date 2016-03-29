@@ -69,3 +69,4 @@ var Drag = function (element) {
     document.detachEvent ? el.detachEvent('on' + event, fn) : el.removeEventListener(event, fn, !0);
   };
 }
+module.exports = Drag;
