@@ -3,15 +3,25 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Clappr plugin dev tutorial 1 - Hello World</title>
-    <!-- <script type="text/javascript" src="/latest/player.js"></script> -->
+    <title>Clappr detach plugin</title>
     <script type="text/javascript" src="http://cdn.clappr.io/latest/clappr.min.js"></script>
   </head>
   <body style="height: 2000px">
     <h1>Clappr plugin dev tutorial 1 - Hello World</h1>
     <div id="player"></div>
-    <script type="text/javascript" src="draggable.js"></script>
-    <script type="text/javascript" src="index.js"></script>
-    <script type="text/javascript" src="example.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+      window.onload = function() {
+        var player = new Clappr.Player({
+          parentId: '#player',
+          autoPlay: true,
+          plugins: [ClapprDetachPlugin],
+          source: 'http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4',
+          height: 360,
+          width: 640
+        })
+      }
+    </script>
+    <script type="text/javascript" src="clappr-detach-plugin.js"></script>
   </body>
 </html>
