@@ -6,9 +6,6 @@
     "start": "node example/server.js",
     "build": "node_modules/.bin/webpack"
   },
-  "dependencies": {
-    "clappr": "0.2.40"
-  },
   "devDependencies": {
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
