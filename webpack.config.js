@@ -14,10 +14,11 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: ['css', "sass"]
+        loaders: ['css', 'sass']
       },
       {
-        test: /\.html/, loader: 'html?minimize=true'
+        test: /\.html/,
+        loader: 'html?minimize=true'
       }
     ],
   },

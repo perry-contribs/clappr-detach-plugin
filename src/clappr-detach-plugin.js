@@ -1,7 +1,9 @@
+const { UICorePlugin, Events, Styler, template } = Clappr
+
 import Drag from './draggable.js'
-import { UICorePlugin, Events, Styler, template } from 'Clappr'
-import DetachIcon from '../public/detach-icon.html'
-import DetachIconStyle from '../public/detach-icon.scss'
+
+import DetachIcon from './public/detach-icon.html'
+import DetachIconStyle from './public/detach-icon.scss'
 
 export default class ClapprDetachPlugin extends UICorePlugin {
   get name() { return 'detach' }
