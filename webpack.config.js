@@ -24,9 +24,6 @@ module.exports = {
   resolve: {
     extensions: ['', '.js'],
   },
-  externals: {
-    "Clappr": "Clappr",
-  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'clappr-detach-plugin.js',
