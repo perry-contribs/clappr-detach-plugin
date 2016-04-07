@@ -17,6 +17,19 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   get placeholderTemplate() { return template(DetachPlaceholder) }
   get iconTemplate() { return template(DetachIcon) }
 
+  get iconMarkup() { return this.iconTemplate() }
+  get placeholderMarkup() {
+    return this.placeholderTemplate({
+      icon: this.iconMarkup,
+      backgroundImage: this.poster
+    })
+  }
+  get mediaControlButtonMarkup() {
+    return this.mediaControlButtonTemplate({
+      icon: this.iconMarkup
+    })
+  }
+
   get mediaControlDetachButton() {
     return this.mediaControl.$el.find('.clappr-detach__media-control-button')
   }
@@ -31,6 +44,45 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       'class': 'clappr-detach',
       'data-detach-selector': ''
     }
+  }
+
+  bindEvents() {
+    this.listenTo(this.mediaControl, Events.MEDIACONTROL_RENDERED, this.onMediaControlRendered)
+  }
+
+  render() {
+    this.renderPlaceholder()
+    this.renderStylesheet()
+    this.appendStatics()
+
+    this.core.$el.append(this.el)
+
+    return this
+  }
+
+  renderPlaceholder() {
+    this.$el.html(this.placeholderMarkup)
+  }
+
+  renderMediaControlButton() {
+    this.mediaControl.setKeepVisible(true)
+
+    const rightPanel = this.mediaControl.$el.find('.media-control-right-panel')
+    rightPanel.append(this.mediaControlButtonMarkup)
+  }
+
+  renderStylesheet() {
+    const detachStyle = Styler.getStyleFor(DetachStyle)
+    this.$el.append(detachStyle)
+  }
+
+  appendStatics() {
+    this.core.$el.append(this.el)
+  }
+
+  onMediaControlRendered() {
+    this.renderMediaControlButton()
+    this.mediaControlDetachButton.on('click', ::this.toggleDetach)
   }
 
   //
@@ -141,64 +193,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   //   this.seekBarContainer.hide()
   // }
 
-  get iconMarkup() {
-    return this.iconTemplate()
-  }
-
-  get placeholderMarkup() {
-    return this.placeholderTemplate({
-      icon: this.iconMarkup,
-      backgroundImage: this.poster
-    })
-  }
-
-  get mediaControlButtonMarkup() {
-    return this.mediaControlButtonTemplate({
-      icon: this.iconMarkup
-    })
-  }
-
-  onMediaControlRendered() {
-    this.renderMediaControlButton()
-    this.mediaControlDetachButton.on('click', ::this.toggleDetach)
-  }
-
-  renderPlaceholder() {
-    this.$el.html(this.placeholderMarkup)
-  }
-
-  renderMediaControlButton() {
-    this.mediaControl.setKeepVisible(true)
-
-    const rightPanel = this.mediaControl.$el.find('.media-control-right-panel')
-    rightPanel.append(this.mediaControlButtonMarkup)
-  }
-
-  renderStylesheet() {
-    const detachStyle = Styler.getStyleFor(DetachStyle)
-    this.$el.append(detachStyle)
-  }
-
-  renderStatics() {
-    this.core.$el.append(this.el)
-  }
-
   toggleDetach() {
-    console.log('toggleDetach')
-    // this.draggable ? this.attach() : this.detach()
-  }
-
-  bindEvents() {
-    this.listenTo(this.mediaControl, Events.MEDIACONTROL_RENDERED, this.onMediaControlRendered)
-  }
-
-  render() {
-    this.renderPlaceholder()
-    this.renderStylesheet()
-    this.renderStatics()
-
-    this.core.$el.append(this.el)
-
-    return this
+    this.draggable ? this.attach() : this.detach()
   }
 }
