@@ -2,7 +2,9 @@ const { UICorePlugin, Events, Styler, template } = Clappr
 
 import Drag from './draggable.js'
 
+import DetachMediaControlButton from './public/detach-media-control-button.html'
 import DetachPlaceholder from './public/detach-placeholder.html'
+import DetachIcon from './public/detach-icon.svg'
 
 import DetachStyle from './public/detach.scss'
 
@@ -10,7 +12,11 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   static pluginName = 'detach'
 
   get name() { return ClapprDetachPlugin.pluginName }
-  get detachPlaceholder() { return template(DetachPlaceholder) }
+
+  get mediaControlButtonTemplate() { return template(DetachMediaControlButton) }
+  get placeholderTemplate() { return template(DetachPlaceholder) }
+  get iconTemplate() { return template(DetachIcon) }
+
   get playerWrapper() { return this.core.$el }
   get mediaControl() { return this.core.mediaControl }
   get clickToPausePlugin() { return this.core.containers[0].getPlugin('click_to_pause') }
@@ -139,23 +145,51 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   //   this.seekBarContainer.hide()
   // }
 
-  placeholder() {
-    return this.detachPlaceholder({
+  get iconMarkup() {
+    return this.iconTemplate()
+  }
+
+  get placeholderMarkup() {
+    return this.placeholderTemplate({
+      icon: this.iconMarkup,
       backgroundImage: this.poster
     })
   }
 
-  render() {
-    //render media-control icon
-    // this.$el.html(this.detachIcon({detachIconClass: 'detach-icon'}))
+  get mediaControlButtonMarkup() {
+    return this.mediaControlButtonTemplate({
+      icon: this.iconMarkup
+    })
+  }
 
-    //render placeholder
-    // this.playerWrapper.parent().prepend(placeholder)
+  renderPlaceholder() {
+    this.$el.html(this.placeholderMarkup)
+  }
 
-    this.$el.html(this.placeholder())
+  renderMediaControlButton() {
+    this.mediaControl.setKeepVisible(true)
+    const rightPanel = this.mediaControl.$el.find('.media-control-right-panel')
+    rightPanel.append(this.mediaControlButtonMarkup)
+  }
 
+  renderStylesheet() {
     const detachStyle = Styler.getStyleFor(DetachStyle)
     this.$el.append(detachStyle)
+  }
+
+  appendStatics() {
+    this.core.$el.append(this.el)
+  }
+
+  bindEvents() {
+    this.listenTo(this.mediaControl, Events.MEDIACONTROL_RENDERED, this.renderMediaControlButton)
+    // this.$el.on('click', ::this.toggleDetach)
+  }
+
+  render() {
+    this.renderPlaceholder()
+    this.renderStylesheet()
+    this.appendStatics()
 
     this.core.$el.append(this.el)
 

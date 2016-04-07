@@ -17,7 +17,7 @@ module.exports = {
         loaders: ['css', 'sass']
       },
       {
-        test: /\.html/,
+        test: /\.(html|svg)$/,
         loader: 'html?minimize=true'
       }
     ],
