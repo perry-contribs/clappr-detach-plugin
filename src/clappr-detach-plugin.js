@@ -17,6 +17,10 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   get placeholderTemplate() { return template(DetachPlaceholder) }
   get iconTemplate() { return template(DetachIcon) }
 
+  get mediaControlDetachButton() {
+    return this.mediaControl.$el.find('.clappr-detach__media-control-button')
+  }
+
   get playerWrapper() { return this.core.$el }
   get mediaControl() { return this.core.mediaControl }
   get clickToPausePlugin() { return this.core.containers[0].getPlugin('click_to_pause') }
@@ -29,14 +33,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     }
   }
 
-  // bindEvents() {
-  //   this.listenTo(this.mediaControl, Events.MEDIACONTROL_RENDERED, this.insertButton)
-  //   this.$el.on('click', ::this.toggleDetach)
-  // }
-  //
-  // toggleDetach() {
-  //   this.draggable ? this.attach() : this.detach()
-  // }
   //
   // resizeAndRepositionPlayer() {
   //   // this.addPlaceholder()
@@ -162,12 +158,18 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     })
   }
 
+  onMediaControlRendered() {
+    this.renderMediaControlButton()
+    this.mediaControlDetachButton.on('click', ::this.toggleDetach)
+  }
+
   renderPlaceholder() {
     this.$el.html(this.placeholderMarkup)
   }
 
   renderMediaControlButton() {
     this.mediaControl.setKeepVisible(true)
+
     const rightPanel = this.mediaControl.$el.find('.media-control-right-panel')
     rightPanel.append(this.mediaControlButtonMarkup)
   }
@@ -177,19 +179,23 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.$el.append(detachStyle)
   }
 
-  appendStatics() {
+  renderStatics() {
     this.core.$el.append(this.el)
   }
 
+  toggleDetach() {
+    console.log('toggleDetach')
+    // this.draggable ? this.attach() : this.detach()
+  }
+
   bindEvents() {
-    this.listenTo(this.mediaControl, Events.MEDIACONTROL_RENDERED, this.renderMediaControlButton)
-    // this.$el.on('click', ::this.toggleDetach)
+    this.listenTo(this.mediaControl, Events.MEDIACONTROL_RENDERED, this.onMediaControlRendered)
   }
 
   render() {
     this.renderPlaceholder()
     this.renderStylesheet()
-    this.appendStatics()
+    this.renderStatics()
 
     this.core.$el.append(this.el)
 
