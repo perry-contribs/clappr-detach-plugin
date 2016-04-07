@@ -1,5 +1,7 @@
 import Drag from './draggable.js'
-import { UICorePlugin, Events } from 'Clappr'
+import { UICorePlugin, Events, Styler, template } from 'Clappr'
+import DetachIcon from '../public/detach-icon.html'
+import DetachIconStyle from '../public/detach-icon.scss'
 
 export default class ClapprDetachPlugin extends UICorePlugin {
   get name() { return 'detach' }
@@ -16,7 +18,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   bindEvents() {
     this.listenTo(this.mediaControl, Events.MEDIACONTROL_RENDERED, this.insertButton)
-
     this.$el.on('click', ::this.toggleDetach)
   }
 
@@ -146,18 +147,9 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   render() {
-    this.$el.html(
-      '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100%" height="100%" viewBox="0 0 24 16" enable-background="new 0 0 24 16" xml:space="preserve">' +
-        '<path fill="#FFFFFF" d="M0,0v16h24V0H0z M23.04,15.059H10.433V8.941H0.96v-8h22.08V15.059z"/>' +
-      '</svg>'
-    )
-    this.$el.css({
-      cursor: 'pointer',
-      float: 'right',
-      border: 0,
-      height: '100%',
-      width: '6%'
-    })
+    this.$el.html(template(DetachIcon))
+    const detachIconStyle = Styler.getStyleFor(DetachIconStyle)
+    this.$el.append(detachIconStyle)
 
     return this
   }
