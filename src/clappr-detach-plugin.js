@@ -64,6 +64,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   bindEvents() {
     this.listenTo(this.core, Events.CORE_OPTIONS_CHANGE, this.onOptionsChange)
     this.listenTo(this.core, Events.CORE_READY, this.onCoreReady)
+    this.listenTo(this.core, Events.CORE_FULLSCREEN, this.onCoreFullScreen)
     this.listenTo(this.mediaControl, Events.MEDIACONTROL_RENDERED, this.onMediaControlRendered)
   }
 
@@ -105,6 +106,15 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.appendStatics()
   }
 
+  onCoreFullScreen(fullscreen) {
+    if (fullscreen) {
+      this.hideMediaControllButton()
+      if (this.isDetached()) this.attach()
+    } else {
+      this.showMediaControllButton()
+    }
+  }
+
   onMediaControlRendered() {
     this.renderMediaControlButton()
     this.mediaControlDetachButton.on('click', ::this.toggleDetach)
@@ -115,7 +125,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   orientationOptions(orientation) {
-    let options = {}
+    const options = {}
     orientation.split('-').forEach((side) => {
       if (side === 'left') { options.left = 10 }
       if (side === 'right') { options.right = 10 }
@@ -177,13 +187,21 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.playerWrapper.attr('style', this.originalStyle)
   }
 
+  showPlaceholder() {
+    this.$el.attr('style', this.originalStyle)
+    this.$el.addClass('clappr-detach--visible')
+  }
+
   hidePlaceholder() {
     this.$el.removeClass('clappr-detach--visible')
   }
 
-  showPlaceholder() {
-    this.$el.attr('style', this.originalStyle)
-    this.$el.addClass('clappr-detach--visible')
+  showMediaControllButton() {
+    this.mediaControlDetachButton.show()
+  }
+
+  hideMediaControllButton() {
+    this.mediaControlDetachButton.hide()
   }
 
   showSeekBar() {
@@ -194,8 +212,12 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.seekBarContainer.hide()
   }
 
+  isDetached() {
+    return this.draggable
+  }
+
   toggleDetach() {
-    this.draggable ? this.attach() : this.detach()
+    this.isDetached() ? this.attach() : this.detach()
   }
 
   attach() {
