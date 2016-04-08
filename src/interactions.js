@@ -7,12 +7,15 @@ export default class Interactions {
   }
 
   dragOn() {
+    insertDraggableBoundary()
+
     interact(this.element)
       .draggable({
         enagle: true,
         inertia: true,
+        autoScroll: true,
         restrict: {
-          restriction: { x: 10, y: 10, width: window.innerWidth-20, height: window.innerHeight-20 },
+          restriction: wrapper,
           endOnly: true,
           elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
         },
@@ -47,5 +50,26 @@ export default class Interactions {
   onEnd(event) {
     const target = event.target
     target.style.transition = this.originalTransition
+    this.removeDraggableBoundary()
+  }
+
+  insertDraggableBoundary() {
+    this.draggableBoundary = document.createElement('div')
+    this.draggableBoundary.className = 'clappr-detach__draggable-area';
+
+    $(this.draggableBoundary).css({
+      position: 'fixed',
+      top: '5vh',
+      left: '5vw',
+      width: '90vw',
+      height: '90vh',
+      pointerEvents: 'none'
+    })
+
+    $('body').prepend(draggableBoundary)
+  }
+
+  removeDraggableBoundary() {
+    $(this.draggableBoundary).remove()
   }
 }
