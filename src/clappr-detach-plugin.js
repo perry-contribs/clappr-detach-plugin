@@ -187,7 +187,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       opacity: 1
     })
 
-    $(this.detachWrapper).addClass('clappr-detach__wrapper--visible')
     $(this.detachWrapper).css(this.miniPlayerOptions)
   }
 
@@ -196,10 +195,16 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     $(this.detachWrapper).append(this.playerWrapper[0])
   }
 
+  setDefaultDetachWrapperPosition() {
+    $(this.detachWrapper).css({
+      transform: "translate(0, 0)"
+    })
+  }
+
   disableMiniPlayer() {
     this.showSeekBar()
     this.movePlayerToOriginalPlace()
-    $(this.detachWrapper).removeClass('clappr-detach__wrapper--visible')
+    this.setDefaultDetachWrapperPosition()
     this.playerWrapper.attr('style', this.originalStyle)
   }
 
