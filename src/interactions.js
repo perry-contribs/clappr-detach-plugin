@@ -2,13 +2,13 @@ import interact from 'interact.js'
 
 export default class Interactions {
   constructor(className) {
-    this.className = className;
+    this.selector = `.${className}`;
     this.dragOn()
   }
 
   dragOn() {
     console.log('ligando')
-    interact(this.className)
+    interact(this.selector)
       .draggable({
         enagle: true,
         inertia: true,
