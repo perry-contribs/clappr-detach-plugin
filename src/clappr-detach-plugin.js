@@ -62,6 +62,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   bindEvents() {
+    this.listenTo(this.core, Events.CORE_OPTIONS_CHANGE, this.onOptionsChange)
     this.listenTo(this.core, Events.CORE_READY, this.onCoreReady)
     this.listenTo(this.mediaControl, Events.MEDIACONTROL_RENDERED, this.onMediaControlRendered)
   }
@@ -74,14 +75,18 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   createPlaceholder() {
+    this.$el.find('.clappr-detach__placeholder-icon').off('click', ::this.toggleDetach)
     this.$el.html(this.placeholderMarkup)
-
     this.$el.find('.clappr-detach__placeholder-icon').on('click', ::this.toggleDetach)
   }
 
   createStylesheet() {
     const detachStyle = Styler.getStyleFor(DetachStyle)
     this.$el.append(detachStyle)
+  }
+
+  removePreviousStatics() {
+    this.playerWrapper.parent().find(this.attributes.class).remove()
   }
 
   appendStatics() {
@@ -96,12 +101,17 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   onCoreReady() {
+    this.removePreviousStatics()
     this.appendStatics()
   }
 
   onMediaControlRendered() {
     this.renderMediaControlButton()
     this.mediaControlDetachButton.on('click', ::this.toggleDetach)
+  }
+
+  onOptionsChange() {
+    this.render()
   }
 
   orientationOptions(orientation) {
