@@ -34,6 +34,21 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     return this.mediaControl.$el.find('.clappr-detach__media-control-button')
   }
 
+  get defaultOptions() {
+    return {
+      orientation: 'bottom-left',
+      opacity: 1,
+      width: 320,
+      height: 180
+    }
+  }
+  get customOptions() { return this.core.options.detachOptions }
+  get miniPlayerOptions() {
+    const computedOptions = Object.assign({}, this.defaultOptions, this.customOptions)
+    const { orientation, ...options } = computedOptions
+    return Object.assign({}, options, this.orientationOptions(orientation))
+  }
+
   get playerWrapper() { return this.core.$el }
   get mediaControl() { return this.core.mediaControl }
   get seekBarContainer() { return this.mediaControl.$el.find('.media-control-center-panel') }
@@ -89,6 +104,23 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.mediaControlDetachButton.on('click', ::this.toggleDetach)
   }
 
+  orientationOptions(orientation) {
+    let options = {}
+    orientation.split('-').forEach((side) => {
+      if (side === 'left') { options.left = 10 }
+      if (side === 'right') { options.right = 10 }
+      if (side === 'bottom') {
+        options.transform = 'translateY(-130px)'
+        options.bottom = -100
+      }
+      if (side === 'top') {
+        options.transform = 'translateY(130px)'
+        options.top = -100
+      }
+    })
+    return options
+  }
+
   resizeAndRepositionPlayer() {
     this.hidePlayer()
     this.enablePlayerDrag()
@@ -125,11 +157,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.hideSeekBar()
 
     this.playerWrapper.addClass('clappr-detach--detached')
-    this.playerWrapper.css({
-      height: 180,
-      width: 320,
-      opacity: 1
-    })
+    this.playerWrapper.css(this.miniPlayerOptions)
   }
 
   disableMiniPlayer() {
