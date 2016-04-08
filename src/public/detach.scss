@@ -1,12 +1,10 @@
 .clappr-detach {
+  display: none;
   position: relative;
   width: 100%;
   height: 100%;
 
-  &[data-detach-selector] {
-    display: none;
-  }
-  &--visible[data-detach-selector] {
+  &--visible {
     display: block;
   }
 
