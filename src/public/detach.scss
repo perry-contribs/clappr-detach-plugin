@@ -8,6 +8,16 @@
     display: block;
   }
 
+  &--detached[data-player] {
+    transition: opacity 1s ease;
+    transition: transform 0.5s ease-in-out;
+    z-index: 99999;
+
+    transform: translateY(-130px);
+    bottom: -100px;
+    left: 10px;
+  }
+
   &__icon * {
     fill: #FFF;
   }

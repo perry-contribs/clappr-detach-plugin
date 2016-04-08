@@ -123,22 +123,20 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   enableMiniPlayer() {
     this.hideSeekBar()
+
+    this.playerWrapper.addClass('clappr-detach--detached')
     this.playerWrapper.css({
-      transition: 'opacity 1s ease',
-      transition: 'transform 0.5s ease-in-out',
-      transform: 'translateY(-130px)',
-      opacity: 1,
-      height: '180px',
-      width: '320px',
-      left: '10px',
-      bottom: '-100px',
-      zIndex: '99999'
+      height: 180,
+      width: 320,
+      opacity: 1
     })
   }
 
   disableMiniPlayer() {
-    this.playerWrapper.attr('style', this.originalStyle)
     this.showSeekBar()
+
+    this.playerWrapper.removeClass('clappr-detach--detached')
+    this.playerWrapper.attr('style', this.originalStyle)
   }
 
   hidePlaceholder() {
