@@ -1,12 +1,26 @@
 import interact from 'interact.js'
 
 export default class Interactions {
-  constructor(element) {
+  constructor(element, options) {
     this.element = element
-    this.dragOn()
+
+    if (options.drag) this.dragOn(options.drag);
+    if (options.drop) this.dropOn(options.drop);
   }
 
-  dragOn() {
+  dropOn({dropAreaClass, onDrop}) {
+    const dropAreaSelector = `.${dropAreaClass}`
+    const elementSelector = `.${this.element.className}`
+
+    interact(dropAreaSelector)
+      .dropzone({
+        accept: elementSelector,
+        overlap: 0.75,
+        ondrop: onDrop
+      })
+  }
+
+  dragOn(options) {
     this.insertDraggableBoundary()
 
     interact(this.element)

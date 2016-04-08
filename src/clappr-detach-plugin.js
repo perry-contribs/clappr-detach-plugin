@@ -158,7 +158,13 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   enablePlayerDrag() {
     this.disablePauseClick()
-    this.draggable = new Interactions(this.detachWrapper)
+    this.draggable = new Interactions(this.detachWrapper, {
+      drag: true,
+      drop: {
+        dropAreaClass: this.el.className,
+        onDrop: ::this.attach
+      }
+    })
   }
 
   disablePlayerDrag() {
@@ -183,7 +189,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       width: '100%',
       opacity: 1
     })
-    console.log(this.miniPlayerOptions)
+
     $(this.detachWrapper).css(this.miniPlayerOptions)
   }
 
