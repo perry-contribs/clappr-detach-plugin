@@ -15,7 +15,7 @@ export default class Interactions {
         inertia: true,
         autoScroll: true,
         restrict: {
-          restriction: wrapper,
+          restriction: this.draggableBoundary,
           endOnly: true,
           elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
         },
@@ -29,6 +29,7 @@ export default class Interactions {
     const target = event.target
     this.originalTransition = target.style.transition
     target.style.transition = 'none'
+    this.insertDraggableBoundary()
   }
 
   onMove(event) {
@@ -66,7 +67,7 @@ export default class Interactions {
       pointerEvents: 'none'
     })
 
-    $('body').prepend(draggableBoundary)
+    $('body').prepend(this.draggableBoundary)
   }
 
   removeDraggableBoundary() {
