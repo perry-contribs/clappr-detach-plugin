@@ -7,7 +7,7 @@ export default class Interactions {
   }
 
   dragOn() {
-    insertDraggableBoundary()
+    this.insertDraggableBoundary()
 
     interact(this.element)
       .draggable({
