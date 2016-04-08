@@ -1,6 +1,7 @@
 const { UICorePlugin, Events, Styler, template } = Clappr
 
 import Drag from './draggable.js'
+import Interactions from './interactions.js'
 
 import DetachMediaControlButton from './public/detach-media-control-button.html'
 import DetachPlaceholder from './public/detach-placeholder.html'
@@ -69,6 +70,8 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   render() {
+    this.detachWrapper = document.createElement('div')
+    this.detachWrapper.className = 'clappr-detach__wrapper'
     this.createPlaceholder()
     this.createStylesheet()
 
@@ -155,13 +158,14 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   enablePlayerDrag() {
     this.disablePauseClick()
-    this.draggable = new Drag(this.playerWrapper[0])
-    this.draggable.init()
+    this.draggable = new Interactions(this.detachWrapper.className)
+    // this.draggable = new Drag(this.playerWrapper[0])
+    // this.draggable.init()
   }
 
   disablePlayerDrag() {
     this.enablePauseClick()
-    this.draggable.destroy()
+    // this.draggable.destroy()
     this.draggable = null
   }
 
@@ -175,16 +179,33 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   enableMiniPlayer() {
     this.hideSeekBar()
+    this.movePlayerToDetachedWrapper()
 
-    this.playerWrapper.addClass('clappr-detach--detached')
-    this.playerWrapper.css(this.miniPlayerOptions)
+    this.playerWrapper.css({
+      height: '100%',
+      width: '100%',
+      opacity: 1
+    })
+
+    $(this.detachWrapper).addClass('clappr-detach__wrapper--visible')
+    $(this.detachWrapper).css(this.miniPlayerOptions)
+  }
+
+  movePlayerToDetachedWrapper() {
+    this.playerWrapper.parent().append(this.detachWrapper)
+    $(this.detachWrapper).append(this.playerWrapper[0])
   }
 
   disableMiniPlayer() {
     this.showSeekBar()
-
-    this.playerWrapper.removeClass('clappr-detach--detached')
+    this.movePlayerToOriginalPlace()
+    $(this.detachWrapper).removeClass('clappr-detach__wrapper--visible')
     this.playerWrapper.attr('style', this.originalStyle)
+  }
+
+  movePlayerToOriginalPlace() {
+    this.playerWrapper.remove()
+    $(this.detachWrapper).parent().append(this.playerWrapper[0])
   }
 
   showPlaceholder() {
