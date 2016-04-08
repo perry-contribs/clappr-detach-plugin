@@ -158,9 +158,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   enablePlayerDrag() {
     this.disablePauseClick()
-    this.draggable = new Interactions(this.detachWrapper.className)
-    // this.draggable = new Drag(this.playerWrapper[0])
-    // this.draggable.init()
+    this.draggable = new Interactions(this.detachWrapper)
   }
 
   disablePlayerDrag() {
