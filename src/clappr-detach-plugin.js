@@ -133,11 +133,11 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       if (side === 'left') { options.left = 10 }
       if (side === 'right') { options.right = 10 }
       if (side === 'bottom') {
-        options.transform = 'translateY(-130px)'
+        options.transform = 'translate(0, -130px)'
         options.bottom = -100
       }
       if (side === 'top') {
-        options.transform = 'translateY(130px)'
+        options.transform = 'translate(0, 130px)'
         options.top = -100
       }
     })

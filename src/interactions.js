@@ -20,7 +20,7 @@ export default class Interactions {
       })
   }
 
-  dragOn(options) {
+  dragOn() {
     this.insertDraggableBoundary()
 
     interact(this.element)
@@ -41,16 +41,18 @@ export default class Interactions {
 
   onStart(event) {
     const target = event.target
-    this.originalTransition = target.style.transition
     target.style.transition = 'none'
+    target.setAttribute('data-x', null);
+    target.setAttribute('data-y', null);
     this.insertDraggableBoundary()
   }
 
   onMove(event) {
     const target = event.target,
-        // keep the dragged position in the data-x/data-y attributes
-        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+      // keep the dragged position in the data-x/data-y attributes
+      [ currentX, currentY ] = target.style.transform.match(/-?[\d\.]+/g),
+      x = (parseFloat(target.getAttribute('data-x')) || parseFloat(currentX) || 0) + event.dx,
+      y = (parseFloat(target.getAttribute('data-y')) || parseFloat(currentY) || 0) + event.dy
 
     // translate the element
     target.style.webkitTransform =
@@ -63,8 +65,6 @@ export default class Interactions {
   }
 
   onEnd(event) {
-    const target = event.target
-    target.style.transition = this.originalTransition
     this.removeDraggableBoundary()
   }
 
