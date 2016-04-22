@@ -43,7 +43,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       height: 180
     }
   }
-  get currentContainer() { this.core.getCurrentContainer() }
+  get currentContainer() { return this.core.getCurrentContainer() }
   get customOptions() { return this.core.options.detachOptions }
   get miniPlayerOptions() {
     const computedOptions = Object.assign({}, this.defaultOptions, this.customOptions)
