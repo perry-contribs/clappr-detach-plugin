@@ -43,6 +43,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       height: 180
     }
   }
+  get currentContainer() { this.core.getCurrentContainer() }
   get customOptions() { return this.core.options.detachOptions }
   get miniPlayerOptions() {
     const computedOptions = Object.assign({}, this.defaultOptions, this.customOptions)
@@ -250,14 +251,24 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   attach() {
+    const isPlaying = this.currentContainer.isPlaying()
     this.disablePlayerDrag()
     this.hidePlaceholder()
     this.disableMiniPlayer()
+
+    if (isPlaying) {
+      this.currentContainer.play()
+    }
   }
 
   detach() {
+    const isPlaying = this.currentContainer.isPlaying()
     this.originalStyle = this.playerWrapper.attr('style')
     this.resizeAndRepositionPlayer()
     this.showPlaceholder()
+
+    if (isPlaying) {
+      this.currentContainer.play()
+    }
   }
 }
