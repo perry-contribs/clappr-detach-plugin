@@ -206,6 +206,12 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     })
 
     $(this.detachWrapper).css(this.miniPlayerOptions)
+    this.setDefaultDetachWrapperPosition()
+    setTimeout(() => {
+      $(this.detachWrapper).css(
+        this.orientationOptions(this.options.orientation)
+      )
+    }, 10)
   }
 
   movePlayerToDetachedWrapper() {
