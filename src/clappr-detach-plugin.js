@@ -41,7 +41,9 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       opacity: 1,
       width: 320,
       height: 180,
-      detachOnStart: false
+      detachOnStart: false,
+      onAttach: () => {},
+      onDetach: () => {}
     }
   }
   get options() {
@@ -288,6 +290,8 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     if (isPlaying) {
       this.currentContainer.play()
     }
+
+    this.options.onAttach()
   }
 
   detach() {
@@ -299,5 +303,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     if (isPlaying) {
       this.currentContainer.play()
     }
+
+    this.options.onDetach()
   }
 }

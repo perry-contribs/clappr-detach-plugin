@@ -24,7 +24,9 @@
             orientation: 'bottom-right',
             width: 320,
             height: 180,
-            detachOnStart: true
+            detachOnStart: true,
+            onAttach: () => { console.log('Attached!') },
+            onDetach: () => { console.log('Detached!') }
           }
         })
       }
