@@ -128,8 +128,16 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   onCoreFullScreen(fullscreen) {
     if (fullscreen) {
       this.hideMediaControllButton()
-      if (this.isDetached()) this.attach()
     } else {
+      if (this.isDetached()) {
+        // FIXME
+        setTimeout(() => {
+          this.core.resize({
+            width: this.options.width,
+            height: this.options.height
+          })
+        }, 10)
+      }
       this.showMediaControllButton()
     }
   }
@@ -215,6 +223,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
     $(this.detachWrapper).css(this.miniPlayerOptions)
     this.setDefaultDetachWrapperPosition()
+    // FIXME
     setTimeout(() => {
       $(this.detachWrapper).css(
         this.orientationOptions(this.options.orientation)
