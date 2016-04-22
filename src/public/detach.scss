@@ -58,9 +58,8 @@
 
 .clappr-detach__wrapper {
   position: fixed;
-  transition: opacity 1s ease;
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.5s ease-in-out, opacity 1s ease;
   z-index: 99999;
-  height: 180;
-  width: 320;
+  height: 180px;
+  width: 320px;
 }

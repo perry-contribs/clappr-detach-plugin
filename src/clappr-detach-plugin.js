@@ -34,24 +34,30 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     return this.mediaControl.$el.find('.clappr-detach__media-control-button')
   }
 
+  get customOptions() { return this.core.options.detachOptions }
   get defaultOptions() {
     return {
       orientation: 'bottom-left',
       opacity: 1,
       width: 320,
-      height: 180
+      height: 180,
+      detachOnStart: false
     }
   }
-  get currentContainer() { return this.core.getCurrentContainer() }
-  get customOptions() { return this.core.options.detachOptions }
+  get options() {
+    if (!this.opts) {
+      this.opts = { ...this.defaultOptions, ...this.customOptions }
+    }
+    return this.opts
+  }
   get miniPlayerOptions() {
-    const computedOptions = Object.assign({}, this.defaultOptions, this.customOptions)
-    const { orientation, ...options } = computedOptions
-    return Object.assign({}, options, this.orientationOptions(orientation))
+    const { orientation, detachOnStart, ...options } = this.options
+    return { ...options, ...this.orientationOptions(orientation) }
   }
 
   get playerWrapper() { return this.core.$el }
   get mediaControl() { return this.core.mediaControl }
+  get currentContainer() { return this.core.getCurrentContainer() }
   get seekBarContainer() { return this.mediaControl.$el.find('.media-control-center-panel') }
   get clickToPausePlugin() { return this.core.containers[0].getPlugin('click_to_pause') }
 
@@ -105,6 +111,8 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   onCoreReady() {
+    this.listenTo(this.currentContainer, Events.CONTAINER_PLAY, this.onContainerPlay)
+
     this.removePreviousStatics()
     this.appendStatics()
   }
@@ -125,6 +133,13 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   onOptionsChange() {
     this.render()
+  }
+
+  onContainerPlay() {
+    if (!this.detachedOnStart && this.options.detachOnStart) {
+      this.detachedOnStart = true
+      this.detach()
+    }
   }
 
   orientationOptions(orientation) {
