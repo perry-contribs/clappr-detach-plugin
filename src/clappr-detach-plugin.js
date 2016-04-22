@@ -291,7 +291,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   isDetached() {
-    return this.draggable
+    return this.detached
   }
 
   toggleDetach() {
@@ -300,6 +300,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   attach() {
     if (this.isDetached()) {
+      this.detached = false
       const isPlaying = this.currentContainer.isPlaying()
       this.disablePlayerDrag()
       this.hidePlaceholder()
@@ -315,6 +316,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   detach() {
     if (!this.isDetached()) {
+      this.detached = true
       const isPlaying = this.currentContainer.isPlaying()
       this.originalStyle = this.playerWrapper.attr('style')
       this.resizeAndRepositionPlayer()
