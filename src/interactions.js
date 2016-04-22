@@ -1,6 +1,8 @@
 import interact from 'interact.js'
 
 export default class Interactions {
+  get draggableAreaClassName() { return 'clappr-detach__draggable-area' }
+
   constructor(element, options) {
     this.element = element
 
@@ -21,7 +23,7 @@ export default class Interactions {
   }
 
   dragOn() {
-    this.insertDraggableBoundary()
+    const draggableBoundary = this.getDraggableBoundary()
 
     interact(this.element)
       .draggable({
@@ -29,13 +31,12 @@ export default class Interactions {
         inertia: true,
         autoScroll: true,
         restrict: {
-          restriction: this.draggableBoundary,
+          restriction: draggableBoundary,
           endOnly: true,
           elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
         },
         onstart: ::this.onStart,
-        onmove: ::this.onMove,
-        onend: ::this.onEnd
+        onmove: ::this.onMove
       })
   }
 
@@ -44,7 +45,6 @@ export default class Interactions {
     target.style.transition = 'none'
     target.setAttribute('data-x', null);
     target.setAttribute('data-y', null);
-    this.insertDraggableBoundary()
   }
 
   onMove(event) {
@@ -64,15 +64,21 @@ export default class Interactions {
     target.setAttribute('data-y', y);
   }
 
-  onEnd(event) {
-    this.removeDraggableBoundary()
+  getDraggableBoundary() {
+    const draggableBoundary = $(`.${this.draggableAreaClassName}`)
+
+    if (draggableBoundary.length > 0) {
+      return draggableBoundary[0]
+    }
+
+    return this.createDraggableBoundary()
   }
 
-  insertDraggableBoundary() {
-    this.draggableBoundary = document.createElement('div')
-    this.draggableBoundary.className = 'clappr-detach__draggable-area';
+  createDraggableBoundary() {
+    const draggableBoundary = document.createElement('div')
+    draggableBoundary.className = this.draggableAreaClassName;
 
-    $(this.draggableBoundary).css({
+    $(draggableBoundary).css({
       position: 'fixed',
       top: '5vh',
       left: '5vw',
@@ -81,10 +87,8 @@ export default class Interactions {
       pointerEvents: 'none'
     })
 
-    $('body').prepend(this.draggableBoundary)
-  }
+    $('body').prepend(draggableBoundary)
 
-  removeDraggableBoundary() {
-    $(this.draggableBoundary).remove()
+    return draggableBoundary
   }
 }
