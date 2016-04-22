@@ -299,28 +299,32 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   attach() {
-    const isPlaying = this.currentContainer.isPlaying()
-    this.disablePlayerDrag()
-    this.hidePlaceholder()
-    this.disableMiniPlayer()
+    if (this.isDetached()) {
+      const isPlaying = this.currentContainer.isPlaying()
+      this.disablePlayerDrag()
+      this.hidePlaceholder()
+      this.disableMiniPlayer()
 
-    if (isPlaying) {
-      this.currentContainer.play()
+      if (isPlaying) {
+        this.currentContainer.play()
+      }
+
+      this.options.onAttach()
     }
-
-    this.options.onAttach()
   }
 
   detach() {
-    const isPlaying = this.currentContainer.isPlaying()
-    this.originalStyle = this.playerWrapper.attr('style')
-    this.resizeAndRepositionPlayer()
-    this.showPlaceholder()
+    if (!this.isDetached()) {
+      const isPlaying = this.currentContainer.isPlaying()
+      this.originalStyle = this.playerWrapper.attr('style')
+      this.resizeAndRepositionPlayer()
+      this.showPlaceholder()
 
-    if (isPlaying) {
-      this.currentContainer.play()
+      if (isPlaying) {
+        this.currentContainer.play()
+      }
+
+      this.options.onDetach()
     }
-
-    this.options.onDetach()
   }
 }
