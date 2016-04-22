@@ -70,6 +70,14 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     }
   }
 
+  getExternalInterface() {
+    return {
+      detach: this.detach,
+      attach: this.attach
+    }
+  }
+
+
   bindEvents() {
     this.listenTo(this.core, Events.CORE_OPTIONS_CHANGE, this.onOptionsChange)
     this.listenTo(this.core, Events.CORE_READY, this.onCoreReady)
