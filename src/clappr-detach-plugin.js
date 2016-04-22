@@ -76,8 +76,14 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   render() {
-    this.detachWrapper = document.createElement('div')
-    this.detachWrapper.className = 'clappr-detach__wrapper'
+    const detachWrapperClassName = 'clappr-detach__wrapper'
+
+    this.detachWrapper = $(`.${detachWrapperClassName}`)
+    if (this.detachWrapper.length == 0) {
+      this.detachWrapper = document.createElement('div')
+      this.detachWrapper.className = detachWrapperClassName
+    }
+
     this.createPlaceholder()
     this.createStylesheet()
 
@@ -215,7 +221,8 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   movePlayerToDetachedWrapper() {
-    this.playerWrapper.parent().append(this.detachWrapper)
+    $('body').append(this.detachWrapper)
+    this.defaultPlayerWrapper = this.playerWrapper.parent()
     $(this.detachWrapper).append(this.playerWrapper[0])
   }
 
@@ -234,7 +241,9 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   movePlayerToOriginalPlace() {
     this.playerWrapper.remove()
-    $(this.detachWrapper).parent().append(this.playerWrapper[0])
+    if (this.defaultPlayerWrapper) {
+      this.defaultPlayerWrapper.append(this.playerWrapper[0])
+    }
   }
 
   showPlaceholder() {
