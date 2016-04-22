@@ -145,6 +145,8 @@ export default class ClapprDetachPlugin extends UICorePlugin {
             height: this.options.height
           })
         }, 10)
+      } else {
+        this.playerWrapper.attr('style', this.originalStyle)
       }
       this.showMediaControllButton()
     }
