@@ -1,6 +1,5 @@
 const { UICorePlugin, Events, Styler, template } = Clappr
 
-import Drag from './draggable.js'
 import Interactions from './interactions.js'
 
 import DetachMediaControlButton from './public/detach-media-control-button.html'
