@@ -41,7 +41,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       opacity: 1,
       width: 320,
       height: 180,
-      detachOnStart: false,
+      detachOnStart: true,
       onAttach: () => {},
       onDetach: () => {}
     }
@@ -67,6 +67,14 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   get attributes() {
     return {
       'class': 'clappr-detach'
+    }
+  }
+
+  constructor(core) {
+    super(core)
+
+    if (core.ready) {
+      this.onCoreReady()
     }
   }
 
@@ -96,8 +104,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
     this.createPlaceholder()
     this.createStylesheet()
-
-    return this
   }
 
   createPlaceholder() {
@@ -107,8 +113,13 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   createStylesheet() {
-    const detachStyle = Styler.getStyleFor(DetachStyle)
-    this.$el.append(detachStyle)
+    const WP3Styler = window.WP3.Styler
+    const { playerId } = this.core.options
+    const style = WP3Styler.getStyleFrom(DetachStyle, { playerId: playerId })
+    this.$el.append(style[0])
+
+    // const detachStyle = Styler.getStyleFor(DetachStyle)
+    // this.$el.append(detachStyle)
   }
 
   removePreviousStatics() {
@@ -122,7 +133,8 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   renderMediaControlButton() {
     this.mediaControl.setKeepVisible(true)
 
-    const rightPanel = this.mediaControl.$el.find('.media-control-right-panel')
+    // const rightPanel = this.mediaControl.$el.find('.media-control-right-panel')
+    const rightPanel = this.mediaControl.$el.find('.media-control-center-panel')
     rightPanel.append(this.mediaControlButtonMarkup)
   }
 
@@ -320,6 +332,10 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     if (!this.isDetached()) {
       this.detached = true
       const isPlaying = this.currentContainer.isPlaying()
+      if (isPlaying) {
+        this.currentContainer.pause()
+      }
+
       this.originalStyle = this.playerWrapper.attr('style')
       this.resizeAndRepositionPlayer()
       this.showPlaceholder()
