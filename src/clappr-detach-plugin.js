@@ -85,7 +85,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     }
   }
 
-
   bindEvents() {
     this.listenTo(this.core, Events.CORE_OPTIONS_CHANGE, this.onOptionsChange)
     this.listenTo(this.core, Events.CORE_READY, this.onCoreReady)
@@ -113,13 +112,8 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   createStylesheet() {
-    const WP3Styler = window.WP3.Styler
-    const { playerId } = this.core.options
-    const style = WP3Styler.getStyleFrom(DetachStyle, { playerId: playerId })
-    this.$el.append(style[0])
-
-    // const detachStyle = Styler.getStyleFor(DetachStyle)
-    // this.$el.append(detachStyle)
+    const detachStyle = Styler.getStyleFor(DetachStyle)
+    this.$el.append(detachStyle)
   }
 
   removePreviousStatics() {
@@ -133,8 +127,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   renderMediaControlButton() {
     this.mediaControl.setKeepVisible(true)
 
-    // const rightPanel = this.mediaControl.$el.find('.media-control-right-panel')
-    const rightPanel = this.mediaControl.$el.find('.media-control-center-panel')
+    const rightPanel = this.mediaControl.$el.find('.media-control-right-panel')
     rightPanel.append(this.mediaControlButtonMarkup)
   }
 

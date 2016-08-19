@@ -6,9 +6,6 @@
   "scripts": {
     "build": "node_modules/.bin/webpack",
     "start": "node_modules/.bin/webpack-dev-server --host 0.0.0.0 --port 3000 --content-base example/ --hot",
-    "artifactory": "npm run test && npm run build && mv ~/npmrc ~/.npmrc && npm publish && mv ~/.npmrc ~/npmrc",
-    "test": "npm run build && jasmine-node spec",
-    "test-watch": "npm run build && jasmine-node spec --autotest --color"
   },
   "repository": {
     "type": "git",
