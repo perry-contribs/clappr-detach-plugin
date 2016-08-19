@@ -6,11 +6,11 @@ export default class Interactions {
   constructor(element, options) {
     this.element = element
 
-    if (options.drag) this.dragOn(options.drag);
-    if (options.drop) this.dropOn(options.drop);
+    if (options.drag) this.dragOn(options.drag)
+    if (options.drop) this.dropOn(options.drop)
   }
 
-  dropOn({dropAreaClass, onDrop}) {
+  dropOn({ dropAreaClass, onDrop }) {
     const dropAreaSelector = `.${dropAreaClass}`
     const elementSelector = `.${this.element.className}`
 
@@ -35,19 +35,19 @@ export default class Interactions {
           endOnly: true,
           elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
         },
-        onstart: ::this.onStart,
-        onmove: ::this.onMove
+        onstart: this.onStart,
+        onmove: this.onMove
       })
   }
 
-  onStart(event) {
+  onStart = (event) => {
     const target = event.target
     target.style.transition = 'none'
     target.setAttribute('data-x', null);
     target.setAttribute('data-y', null);
   }
 
-  onMove(event) {
+  onMove = (event) => {
     const target = event.target,
       // keep the dragged position in the data-x/data-y attributes
       [ currentX, currentY ] = target.style.transform.match(/-?[\d\.]+/g),
@@ -76,7 +76,7 @@ export default class Interactions {
 
   createDraggableBoundary() {
     const draggableBoundary = document.createElement('div')
-    draggableBoundary.className = this.draggableAreaClassName;
+    draggableBoundary.className = this.draggableAreaClassName
 
     $(draggableBoundary).css({
       position: 'fixed',

@@ -73,9 +73,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   constructor(core) {
     super(core)
 
-    if (core.ready) {
-      this.onCoreReady()
-    }
+    if (core.ready) this.onCoreReady()
   }
 
   getExternalInterface() {
@@ -94,8 +92,8 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   render() {
     const detachWrapperClassName = 'clappr-detach__wrapper'
-
     this.detachWrapper = $(`.${detachWrapperClassName}`)
+
     if (this.detachWrapper.length == 0) {
       this.detachWrapper = document.createElement('div')
       this.detachWrapper.className = detachWrapperClassName
@@ -106,9 +104,9 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   createPlaceholder() {
-    this.$el.find('.clappr-detach__placeholder-icon').off('click', ::this.toggleDetach)
+    this.$el.find('.clappr-detach__placeholder-icon').off('click', this.toggleDetach)
     this.$el.html(this.placeholderMarkup)
-    this.$el.find('.clappr-detach__placeholder-icon').on('click', ::this.toggleDetach)
+    this.$el.find('.clappr-detach__placeholder-icon').on('click', this.toggleDetach)
   }
 
   createStylesheet() {
@@ -153,13 +151,14 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       } else {
         this.playerWrapper.attr('style', this.originalStyle)
       }
+
       this.showMediaControllButton()
     }
   }
 
   onMediaControlRendered() {
     this.renderMediaControlButton()
-    this.mediaControlDetachButton.on('click', ::this.toggleDetach)
+    this.mediaControlDetachButton.on('click', this.toggleDetach)
   }
 
   onOptionsChange() {
@@ -175,6 +174,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   orientationOptions(orientation) {
     const options = {}
+
     orientation.split('-').forEach((side) => {
       if (side === 'left') { options.left = 10 }
       if (side === 'right') { options.right = 10 }
@@ -187,6 +187,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
         options.top = -100
       }
     })
+
     return options
   }
 
@@ -208,7 +209,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       drag: true,
       drop: {
         dropAreaClass: this.el.className,
-        onDrop: ::this.attach
+        onDrop: this.attach
       }
     })
   }
@@ -301,11 +302,11 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     return this.detached
   }
 
-  toggleDetach() {
+  toggleDetach = () => {
     this.isDetached() ? this.attach() : this.detach()
   }
 
-  attach() {
+  attach = () => {
     if (this.isDetached()) {
       this.detached = false
       const isPlaying = this.currentContainer.isPlaying()
