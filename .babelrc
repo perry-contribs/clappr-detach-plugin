@@ -4,7 +4,6 @@
     "stage-0",
   ],
   "plugins": [
-    "syntax-function-bind",
     "babel-plugin-add-module-exports"
   ]
 }
