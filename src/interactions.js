@@ -29,7 +29,7 @@ export default class Interactions {
       .draggable({
         enagle: true,
         inertia: true,
-        autoScroll: true,
+        autoScroll: false,
         restrict: {
           restriction: draggableBoundary,
           endOnly: true,
@@ -43,8 +43,8 @@ export default class Interactions {
   onStart = (event) => {
     const target = event.target
     target.style.transition = 'none'
-    target.setAttribute('data-x', null);
-    target.setAttribute('data-y', null);
+    target.setAttribute('data-x', null)
+    target.setAttribute('data-y', null)
   }
 
   onMove = (event) => {
@@ -57,11 +57,11 @@ export default class Interactions {
     // translate the element
     target.style.webkitTransform =
     target.style.transform =
-      'translate(' + x + 'px, ' + y + 'px)';
+      'translate(' + x + 'px, ' + y + 'px)'
 
     // update the posiion attributes
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
+    target.setAttribute('data-x', x)
+    target.setAttribute('data-y', y)
   }
 
   getDraggableBoundary() {
