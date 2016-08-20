@@ -15,7 +15,9 @@
           parentId: '#player',
           autoPlay: true,
           mute: true,
-          plugins: [ClapprDetachPlugin],
+          plugins: {
+            'core': [ClapprDetachPlugin]
+          },
           source: 'big_buck_bunny_480p_5mb.mp4',
           width: 640,
           height: 360,
