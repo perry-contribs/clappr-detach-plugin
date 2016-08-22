@@ -43,5 +43,21 @@
     "plugins": [
       "babel-plugin-add-module-exports"
     ]
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "globals": {
+      "$": true,
+      "jQuery": true
+    },
+    "parser": "babel-eslint",
+    "rules": {
+      "strict": 0,
+      "quotes": [2, "single"],
+      "key-spacing": 0
+    }
   }
 }
