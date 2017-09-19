@@ -5,21 +5,19 @@
   "main": "./dist/clappr-detach-plugin.js",
   "scripts": {
     "build": "node_modules/.bin/webpack",
-    "start": "node_modules/.bin/webpack-dev-server --host 0.0.0.0 --port 3000 --content-base example/ --hot"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:team-blackbird/clappr-detach-plugin.git"
+    "url": "git@github.com:rafaeleyng/clappr-detach-plugin.git"
   },
   "keywords": [
     "plugin",
     "detach",
     "Player",
-    "Clappr",
-    "javascript"
+    "Clappr"
   ],
-  "author": "blackbird@corp.globo.com",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.7.4",
     "babel-eslint": "7.2.3",
