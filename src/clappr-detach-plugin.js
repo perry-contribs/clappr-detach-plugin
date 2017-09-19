@@ -1,5 +1,4 @@
-const { UICorePlugin, Events, Styler, template } = Clappr
-
+import { UICorePlugin, Events, Styler, template } from 'clappr'
 import Interactions from './interactions.js'
 
 import DetachMediaControlButton from './public/detach-media-control-button.html'

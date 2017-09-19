@@ -3,6 +3,12 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: path.resolve(__dirname, 'src/index.js'),
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'clappr-detach-plugin.js',
+    library: 'ClapprDetachPlugin',
+    libraryTarget: 'umd',
+  },
   module: {
     loaders: [
       {
@@ -25,10 +31,12 @@ module.exports = {
   resolve: {
     extensions: ['', '.js'],
   },
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'clappr-detach-plugin.js',
-    library: 'ClapprDetachPlugin',
-    libraryTarget: 'umd',
-  }
+  externals: {
+    clappr: {
+      commonjs: 'clappr',
+      commonjs2: 'clappr',
+      amd: 'clappr',
+      root: 'Clappr',
+    }
+  },
 };
