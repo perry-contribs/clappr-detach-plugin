@@ -1,7 +1,11 @@
+/* eslint-disable import/extensions, import/no-unresolved */
+import $ from 'clappr-zepto/zepto'
+/* eslint-enable import/extensions, import/no-unresolved */
+
 import interact from 'interact.js'
 
 export default class Interactions {
-  get draggableAreaClassName() { return 'clappr-detach__draggable-area' }
+  draggableAreaClassName = 'clappr-detach__draggable-area'
 
   constructor(element, options) {
     this.element = element
@@ -18,7 +22,7 @@ export default class Interactions {
       .dropzone({
         accept: elementSelector,
         overlap: 0.75,
-        ondrop: onDrop
+        ondrop: onDrop,
       })
   }
 
@@ -33,31 +37,34 @@ export default class Interactions {
         restrict: {
           restriction: draggableBoundary,
           endOnly: true,
-          elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+          elementRect: {
+            top: 0, left: 0, bottom: 1, right: 1,
+          },
         },
         onstart: this.onStart,
-        onmove: this.onMove
+        onmove: this.onMove,
       })
   }
 
   onStart = (event) => {
-    const target = event.target
+    const { target } = event
     target.style.transition = 'none'
     target.setAttribute('data-x', null)
     target.setAttribute('data-y', null)
   }
 
   onMove = (event) => {
-    const target = event.target,
-      // keep the dragged position in the data-x/data-y attributes
-      [ currentX, currentY ] = target.style.transform.match(/-?[\d\.]+/g),
-      x = (parseFloat(target.getAttribute('data-x')) || parseFloat(currentX) || 0) + event.dx,
-      y = (parseFloat(target.getAttribute('data-y')) || parseFloat(currentY) || 0) + event.dy
+    const { target } = event
+
+    // keep the dragged position in the data-x/data-y attributes
+    const [currentX, currentY] = target.style.transform.match(/-?[\d.]+/g)
+    const x = (parseFloat(target.getAttribute('data-x')) || parseFloat(currentX) || 0) + event.dx
+    const y = (parseFloat(target.getAttribute('data-y')) || parseFloat(currentY) || 0) + event.dy
 
     // translate the element
-    target.style.webkitTransform =
-    target.style.transform =
-      'translate(' + x + 'px, ' + y + 'px)'
+    const transform = `translate(${x}px, ${y}px)`
+    target.style.webkitTransform = transform
+    target.style.transform = transform
 
     // update the posiion attributes
     target.setAttribute('data-x', x)
@@ -84,7 +91,7 @@ export default class Interactions {
       left: '5vw',
       width: '90vw',
       height: '90vh',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
     })
 
     $('body').prepend(draggableBoundary)

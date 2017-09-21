@@ -1,5 +1,4 @@
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path')
 
 module.exports = {
   entry: path.resolve(__dirname, 'src/index.js'),
@@ -16,16 +15,16 @@ module.exports = {
         loader: 'babel',
         query: {
           compact: true,
-        }
+        },
       },
       {
         test: /\.scss$/,
-        loaders: ['css', 'sass']
+        loaders: ['css', 'sass'],
       },
       {
         test: /\.(html|svg)$/,
-        loader: 'html?minimize=true'
-      }
+        loader: 'html?minimize=true',
+      },
     ],
   },
   resolve: {
@@ -37,6 +36,12 @@ module.exports = {
       commonjs2: 'clappr',
       amd: 'clappr',
       root: 'Clappr',
-    }
+    },
+    'clappr-zepto/zepto': {
+      commonjs: 'clappr-zepto/zepto',
+      commonjs2: 'clappr-zepto/zepto',
+      amd: 'clappr-zepto/zepto',
+      root: '$',
+    },
   },
-};
+}
