@@ -15,14 +15,16 @@ const DETACH_STYLE_TAG = Styler.getStyleFor(DetachStyle)
 
 const DEFAULT_POSTER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
 
+const NOOP = () => {}
+
 const DEFAULT_OPTIONS = {
   orientation: 'bottom-left',
   opacity: 1,
   width: 320,
   height: 180,
   detachOnStart: true,
-  onAttach: () => {},
-  onDetach: () => {},
+  onAttach: NOOP,
+  onDetach: NOOP,
 }
 
 // let options
@@ -69,14 +71,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     return 'clappr-detach'
   }
   /* eslint-enable class-methods-use-this */
-
-  // clappr uses this
-  getExternalInterface() {
-    return {
-      detach: this.detach,
-      attach: this.attach,
-    }
-  }
 
   constructor(core) {
     super(core)
@@ -138,11 +132,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.$mainPlayerParent.append(this.$mainPlayer[0])
   }
 
-  resetStatics() {
-    this.$mainPlayerParent.find(this.className).remove()
-    this.$mainPlayerParent.append(this.$mainPlayerPlaceholder[0])
-  }
-
   /*
     ---------------------------------------------------------------------------
     events
@@ -158,7 +147,10 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   onCoreReady() {
     this.initElements()
     this.listenTo(this.currentContainer, Events.CONTAINER_PLAY, this.onContainerPlay)
-    this.resetStatics()
+
+    // clean up any element that might conflict with the placeholder
+    this.$mainPlayerParent.find(this.className).remove()
+    this.$mainPlayerParent.append(this.$mainPlayerPlaceholder[0])
   }
 
   onContainerPlay() {
@@ -193,10 +185,10 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     fullscreen
     ---------------------------------------------------------------------------
   */
-  onCoreFullScreen(fullscreen) {
-    if (fullscreen) {
-      this.hideMediaControllButton()
-    } else {
+  onCoreFullScreen(goingToFullScreen) {
+    this.mediaControlDetachButton.toggle(!goingToFullScreen)
+
+    if (!goingToFullScreen) {
       if (this.isDetached) {
         // FIXME
         setTimeout(() => {
@@ -208,8 +200,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
       } else {
         this.$mainPlayer.attr('style', this.mainPlayerOriginalStyle)
       }
-
-      this.showMediaControllButton()
     }
   }
 
@@ -218,35 +208,17 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     media control
     ---------------------------------------------------------------------------
   */
+  get clickToPausePlugin() { return this.core.containers[0].getPlugin('click_to_pause') }
   get mediaControl() { return this.core.mediaControl }
   get mediaControlDetachButton() { return this.mediaControl.$el.find('.clappr-detach__media-control-button') }
+  get mediaControlRightPanel() { return this.mediaControl.$el.find('.media-control-right-panel') }
+  get mediaControlSeekBar() { return this.mediaControl.$el.find('.media-control-center-panel') }
 
   onMediaControlRendered() {
-    this.renderMediaControlButton()
+    this.mediaControl.setKeepVisible(true)
+    this.mediaControlRightPanel.append(mediaControlButtonMarkup)
     this.mediaControlDetachButton.on('click', this.toggleDetach)
   }
-
-  renderMediaControlButton() {
-    this.mediaControl.setKeepVisible(true)
-
-    const rightPanel = this.mediaControl.$el.find('.media-control-right-panel')
-    rightPanel.append(mediaControlButtonMarkup)
-  }
-
-  showMediaControllButton() {
-    this.mediaControlDetachButton.show()
-  }
-
-  hideMediaControllButton() {
-    this.mediaControlDetachButton.hide()
-  }
-
-  /*
-    ---------------------------------------------------------------------------
-    pause
-    ---------------------------------------------------------------------------
-  */
-  get clickToPausePlugin() { return this.core.containers[0].getPlugin('click_to_pause') }
 
   enablePauseClick() {
     this.clickToPausePlugin.enable()
@@ -267,6 +239,14 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     })
   }
 
+  showPlayer() {
+    this.$mainPlayer.css({
+      height: '100%',
+      width: '100%',
+      opacity: 1,
+    })
+  }
+
   /*
     ---------------------------------------------------------------------------
     mini player
@@ -278,15 +258,10 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   enableMiniPlayer() {
-    this.hideSeekBar()
+    this.mediaControlSeekBar.hide()
     this.movePlayerToDetachedWrapper()
 
-    this.$mainPlayer.css({
-      height: '100%',
-      width: '100%',
-      opacity: 1,
-    })
-
+    this.showPlayer()
     this.$miniPlayer.css(this.miniPlayerOptions)
     this.resetMiniPlayerPosition()
     // FIXME
@@ -296,7 +271,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   disableMiniPlayer() {
-    this.showSeekBar()
+    this.mediaControlSeekBar.show()
     this.movePlayerToOriginalPlace()
     this.resetMiniPlayerPosition()
     this.$mainPlayer.attr('style', this.mainPlayerOriginalStyle)
@@ -306,21 +281,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.$miniPlayer.css({
       transform: 'translate(0, 0)',
     })
-  }
-
-  /*
-    ---------------------------------------------------------------------------
-    seek bar
-    ---------------------------------------------------------------------------
-  */
-  get seekBarContainer() { return this.mediaControl.$el.find('.media-control-center-panel') }
-
-  showSeekBar() {
-    this.seekBarContainer.show()
-  }
-
-  hideSeekBar() {
-    this.seekBarContainer.hide()
   }
 
   /*
@@ -363,6 +323,14 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     attach / detach
     ---------------------------------------------------------------------------
   */
+  // clappr uses this
+  getExternalInterface() {
+    return {
+      detach: this.detach,
+      attach: this.attach,
+    }
+  }
+
   toggleDetach = () => {
     if (this.isDetached) {
       this.attach()
