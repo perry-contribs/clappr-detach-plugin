@@ -18,8 +18,8 @@ module.exports = {
         },
       },
       {
-        test: /\.scss$/,
-        loaders: ['css', 'sass'],
+        test: /\.css$/,
+        loader: 'css',
       },
       {
         test: /\.(html|svg)$/,
