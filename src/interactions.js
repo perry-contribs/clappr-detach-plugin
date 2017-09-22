@@ -79,11 +79,10 @@ const setupDrag = (element) => {
     })
 }
 
-const setupDrop = (element, { dropAreaClass, onDrop }) => {
-  const dropAreaSelector = `.${dropAreaClass}`
+const setupDrop = (element, { dropAreaElement, onDrop }) => {
   const elementSelector = `.${element.className}`
 
-  interact(dropAreaSelector)
+  interact(dropAreaElement)
     .dropzone({
       accept: elementSelector,
       overlap: 0.75,

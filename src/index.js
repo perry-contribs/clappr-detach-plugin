@@ -293,7 +293,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     setupInteractions(this.$miniPlayerParent[0], {
       drag: true,
       drop: {
-        dropAreaClass: this.className,
+        dropAreaElement: this.$playerPlaceholder[0],
         onDrop: this.attach,
       },
     })
@@ -398,6 +398,9 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   render() {
     this.initElements()
+
+
+    console.log('####### this.$playerPlaceholder', this.$playerPlaceholder)
 
     this.$playerPlaceholder.empty()
     this.$playerPlaceholder.append(this.createPlaceholder())
