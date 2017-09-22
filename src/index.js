@@ -3,7 +3,7 @@ import { UICorePlugin, Events, Styler, template } from 'clappr'
 import $ from 'clappr-zepto/zepto'
 /* eslint-enable import/extensions, import/no-unresolved */
 
-import Interactions from './interactions'
+import setupInteractions from './interactions'
 
 // assets
 import DetachMediaControlButton from './assets/detach-media-control-button.html'
@@ -124,11 +124,11 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     wrapper
     ---------------------------------------------------------------------------
   */
-  movePlayerToDetachedWrapper = () => {
+  moveToMiniPlayerParent = () => {
     this.$miniPlayerParent.append(this.$player[0])
   }
 
-  movePlayerToOriginalPlace = () => {
+  moveToMainPlayerParent = () => {
     this.$mainPlayerParent.append(this.$player[0])
   }
 
@@ -259,7 +259,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   enableMiniPlayer() {
     this.mediaControlSeekBar.hide()
-    this.movePlayerToDetachedWrapper()
+    this.moveToMiniPlayerParent()
 
     this.showPlayer()
     this.$miniPlayerParent.css(this.miniPlayerOptions)
@@ -272,7 +272,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   disableMiniPlayer() {
     this.mediaControlSeekBar.show()
-    this.movePlayerToOriginalPlace()
+    this.moveToMainPlayerParent()
     this.resetMiniPlayerPosition()
     this.$player.attr('style', this.mainPlayerOriginalStyle)
   }
@@ -290,7 +290,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   */
   enablePlayerDrag() {
     this.disablePauseClick()
-    this.draggable = new Interactions(this.$miniPlayerParent[0], {
+    setupInteractions(this.$miniPlayerParent[0], {
       drag: true,
       drop: {
         dropAreaClass: this.className,
@@ -301,7 +301,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   disablePlayerDrag() {
     this.enablePauseClick()
-    this.draggable = null
   }
 
   /*
