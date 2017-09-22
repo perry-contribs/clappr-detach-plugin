@@ -92,6 +92,59 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   /*
     ---------------------------------------------------------------------------
+    elements
+    ---------------------------------------------------------------------------
+  */
+  get $mainPlayer() { return this.core.$el }
+  get $mainPlayerPlaceholder() { return this.$el }
+
+  initElements() {
+    this.initMiniPlayerElement()
+    this.initMainPlayerParentElement()
+  }
+
+  initMiniPlayerElement() {
+    if (this.$miniPlayer) {
+      return
+    }
+
+    const el = $('<div>')
+    el.addClass('clappr-detach__wrapper')
+    $('body').append(el)
+
+    this.$miniPlayer = el
+  }
+
+  initMainPlayerParentElement() {
+    // When $mainPlayer is mounted in the DOM (after Events.CORE_READY), we keep a reference to the parent.
+    // Since $mainPlayer may be removed later, it may not have a parent later, so we keep the reference.
+    if (this.$mainPlayerParent || !this.$mainPlayer.parent()[0]) {
+      return
+    }
+
+    this.$mainPlayerParent = this.$mainPlayer.parent()
+  }
+
+  /*
+    ---------------------------------------------------------------------------
+    wrapper
+    ---------------------------------------------------------------------------
+  */
+  movePlayerToDetachedWrapper = () => {
+    this.$miniPlayer.append(this.$mainPlayer[0])
+  }
+
+  movePlayerToOriginalPlace = () => {
+    this.$mainPlayerParent.append(this.$mainPlayer[0])
+  }
+
+  resetStatics() {
+    this.$mainPlayerParent.find(this.className).remove()
+    this.$mainPlayerParent.append(this.$mainPlayerPlaceholder[0])
+  }
+
+  /*
+    ---------------------------------------------------------------------------
     events
     ---------------------------------------------------------------------------
   */
@@ -103,10 +156,16 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   onCoreReady() {
+    this.initElements()
     this.listenTo(this.currentContainer, Events.CONTAINER_PLAY, this.onContainerPlay)
+    this.resetStatics()
+  }
 
-    this.removePreviousStatics()
-    this.appendStatics()
+  onContainerPlay() {
+    if (!this.alreadyDetachedOnStart && this.options.detachOnStart) {
+      this.alreadyDetachedOnStart = true
+      this.detach()
+    }
   }
 
   /*
@@ -147,17 +206,10 @@ export default class ClapprDetachPlugin extends UICorePlugin {
           })
         }, 10)
       } else {
-        this.playerWrapper.attr('style', this.originalStyle)
+        this.$mainPlayer.attr('style', this.mainPlayerOriginalStyle)
       }
 
       this.showMediaControllButton()
-    }
-  }
-
-  onContainerPlay() {
-    if (!this.detachedOnStart && this.options.detachOnStart) {
-      this.detachedOnStart = true
-      this.detach()
     }
   }
 
@@ -210,15 +262,50 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     ---------------------------------------------------------------------------
   */
   hidePlayer() {
-    this.playerWrapper.css({
+    this.$mainPlayer.css({
       opacity: 0,
     })
   }
 
-  resizeAndRepositionPlayer() {
-    this.hidePlayer()
-    this.enablePlayerDrag()
-    this.enableMiniPlayer()
+  /*
+    ---------------------------------------------------------------------------
+    mini player
+    ---------------------------------------------------------------------------
+  */
+  get miniPlayerOptions() {
+    const { orientation, detachOnStart, ...options } = this.options
+    return { ...options, ...orientationOptions(orientation) }
+  }
+
+  enableMiniPlayer() {
+    this.hideSeekBar()
+    this.movePlayerToDetachedWrapper()
+
+    this.$mainPlayer.css({
+      height: '100%',
+      width: '100%',
+      opacity: 1,
+    })
+
+    this.$miniPlayer.css(this.miniPlayerOptions)
+    this.resetMiniPlayerPosition()
+    // FIXME
+    setTimeout(() => {
+      this.$miniPlayer.css(orientationOptions(this.options.orientation))
+    }, 10)
+  }
+
+  disableMiniPlayer() {
+    this.showSeekBar()
+    this.movePlayerToOriginalPlace()
+    this.resetMiniPlayerPosition()
+    this.$mainPlayer.attr('style', this.mainPlayerOriginalStyle)
+  }
+
+  resetMiniPlayerPosition() {
+    this.$miniPlayer.css({
+      transform: 'translate(0, 0)',
+    })
   }
 
   /*
@@ -238,50 +325,15 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   /*
     ---------------------------------------------------------------------------
-    mini player
-    ---------------------------------------------------------------------------
-  */
-  get miniPlayerOptions() {
-    const { orientation, detachOnStart, ...options } = this.options
-    return { ...options, ...orientationOptions(orientation) }
-  }
-
-  enableMiniPlayer() {
-    this.hideSeekBar()
-    this.movePlayerToDetachedWrapper()
-
-    this.playerWrapper.css({
-      height: '100%',
-      width: '100%',
-      opacity: 1,
-    })
-
-    $(this.detachWrapper).css(this.miniPlayerOptions)
-    this.setDefaultDetachWrapperPosition()
-    // FIXME
-    setTimeout(() => {
-      $(this.detachWrapper).css(orientationOptions(this.options.orientation))
-    }, 10)
-  }
-
-  disableMiniPlayer() {
-    this.showSeekBar()
-    this.movePlayerToOriginalPlace()
-    this.setDefaultDetachWrapperPosition()
-    this.playerWrapper.attr('style', this.originalStyle)
-  }
-
-  /*
-    ---------------------------------------------------------------------------
     drag
     ---------------------------------------------------------------------------
   */
   enablePlayerDrag() {
     this.disablePauseClick()
-    this.draggable = new Interactions(this.detachWrapper, {
+    this.draggable = new Interactions(this.$miniPlayer[0], {
       drag: true,
       drop: {
-        dropAreaClass: this.el.className,
+        dropAreaClass: this.className,
         onDrop: this.attach,
       },
     })
@@ -294,50 +346,16 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   /*
     ---------------------------------------------------------------------------
-    wrapper
-    ---------------------------------------------------------------------------
-  */
-  get playerWrapper() { return this.core.$el }
-
-  movePlayerToDetachedWrapper() {
-    $('body').append(this.detachWrapper)
-    this.defaultPlayerWrapper = this.playerWrapper.parent()
-    $(this.detachWrapper).append(this.playerWrapper[0])
-  }
-
-  setDefaultDetachWrapperPosition() {
-    $(this.detachWrapper).css({
-      transform: 'translate(0, 0)',
-    })
-  }
-
-  movePlayerToOriginalPlace() {
-    this.playerWrapper.remove()
-    if (this.defaultPlayerWrapper) {
-      this.defaultPlayerWrapper.append(this.playerWrapper[0])
-    }
-  }
-
-  removePreviousStatics() {
-    this.playerWrapper.parent().find(this.className).remove()
-  }
-
-  appendStatics() {
-    this.playerWrapper.parent().append(this.el)
-  }
-
-  /*
-    ---------------------------------------------------------------------------
     placeholder
     ---------------------------------------------------------------------------
   */
   showPlaceholder() {
-    this.$el.attr('style', this.originalStyle)
-    this.$el.addClass('clappr-detach--visible')
+    this.$mainPlayerPlaceholder.attr('style', this.mainPlayerOriginalStyle)
+    this.$mainPlayerPlaceholder.addClass('clappr-detach--visible')
   }
 
   hidePlaceholder() {
-    this.$el.removeClass('clappr-detach--visible')
+    this.$mainPlayerPlaceholder.removeClass('clappr-detach--visible')
   }
 
   /*
@@ -357,9 +375,10 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     if (!this.isDetached) {
       return
     }
-
     this.isDetached = false
+
     const isPlaying = this.currentContainer.isPlaying()
+
     this.disablePlayerDrag()
     this.hidePlaceholder()
     this.disableMiniPlayer()
@@ -375,15 +394,19 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     if (this.isDetached) {
       return
     }
-
     this.isDetached = true
+
     const isPlaying = this.currentContainer.isPlaying()
+
     if (isPlaying) {
       this.currentContainer.pause()
     }
 
-    this.originalStyle = this.playerWrapper.attr('style')
-    this.resizeAndRepositionPlayer()
+    this.mainPlayerOriginalStyle = this.$mainPlayer.attr('style')
+
+    this.hidePlayer()
+    this.enablePlayerDrag()
+    this.enableMiniPlayer()
     this.showPlaceholder()
 
     if (isPlaying) {
@@ -400,24 +423,18 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   */
   createPlaceholder() {
     // TODO rafael - colocar esses eventos?
-    // this.$el.find('.clappr-detach__placeholder-icon').off('click', this.toggleDetach)
-    // this.$el.html(placeholderMarkup(this.core.options.poster))
-    // this.$el.find('.clappr-detach__placeholder-icon').on('click', this.toggleDetach)
+    // this.$mainPlayerPlaceholder.find('.clappr-detach__placeholder-icon').off('click', this.toggleDetach)
+    // this.$mainPlayerPlaceholder.html(placeholderMarkup(this.core.options.poster))
+    // this.$mainPlayerPlaceholder.find('.clappr-detach__placeholder-icon').on('click', this.toggleDetach)
     return placeholderMarkup(this.core.options.poster)
   }
 
   render() {
-    const detachWrapperClassName = 'clappr-detach__wrapper'
-    this.detachWrapper = $(`.${detachWrapperClassName}`)
+    this.initElements()
 
-    if (this.detachWrapper.length === 0) {
-      this.detachWrapper = document.createElement('div')
-      this.detachWrapper.className = detachWrapperClassName
-    }
-
-    this.$el.empty()
-    this.$el.append(this.createPlaceholder())
-    this.$el.append(DETACH_STYLE_TAG)
+    this.$mainPlayerPlaceholder.empty()
+    this.$mainPlayerPlaceholder.append(this.createPlaceholder())
+    this.$mainPlayerPlaceholder.append(DETACH_STYLE_TAG)
   }
 
   /*
