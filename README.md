@@ -1,54 +1,77 @@
 # clappr-detach-plugin
 
-A clappr plugin to detach video from screen
+A [Clappr](https://github.com/clappr/clappr) plugin to detach the video.
+
+![clappr-detach-plugin](https://user-images.githubusercontent.com/4842605/30820777-567d2960-a1f9-11e7-854a-32acc6cb0a47.png)
+
+This project is a fork from https://github.com/team-767/clappr-detach-plugin. The code was simplified and we published it to npm, but the main idea remains the same.
 
 
+## Installation
 
-## Installing
-  TODO
+```shell
+npm install -S clappr-detach-plugin
+```
+
+This project requires you to provide the following peerDependencies:
+
+```
+"peerDependencies": {
+  "clappr": "^0.2.73",
+  "clappr-zepto": "0.0.7"
+},
+```
+
 
 ## Usage
-``` javascript
+
+```javascript
 import ClapprDetachPlugin from 'clappr-detach-plugin'
 
 const player = new Clappr.Player({
   source: 'http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4',
-
   plugins: {
     'core': [ClapprDetachPlugin]
   }
 })
 ```
 
-You can also configure plugin behavior using `detachOptions` with following options
+This plugin exposes the public methods `attach` and `detach` that you can call with:
 
-|    Property    | Type |          Description          | values | default |
-| -------------  | ---- |          -----------          | ------ | ------- |
-| orientation    | string | It's where player will appear on detach | 'bottom-left', 'top-left', 'bottom-right', 'top-right' | 'bottom-left' |
-| detachOnStart | bool | automatically detach when player starts to play | true, false | true |
-| width | number | player width on detach | Any integer value | 320 |
-| height | number | player height on detach | Any integer value | 180 |
-| onDetach | function | callback called when player detach from original place | function | noop |
-| onAttach | function | callback called when player attach on original place | function | noop |
+```javascript
+player.getPlugin('detach').detach()
+player.getPlugin('detach').attach()
+```
 
-``` javascript
+
+## Options
+
+```javascript
 import ClapprDetachPlugin from 'clappr-detach-plugin'
 
 const player = new Clappr.Player({
   source: 'http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4',
-
   plugins: {
     'core': [ClapprDetachPlugin]
   },
+  // these are the default values
   detachOptions: {
     orientation: 'bottom-right',
+    opacity: 1,
     width: 320,
     height: 180,
-    detachOnStart: true,
-    onAttach: () => { console.log('Attached!') },
-    onDetach: () => { console.log('Detached!') }
+    detachOnStart: false,
+    onAttach: () => { },
+    onDetach: () => { }
   }
 })
-
-player.getPlugin('detach').detach()
 ```
+
+| Property            | Type          | Description                                             | valid values                                           |
+| ------------------- | ------------- | ------------------------------------------------------- | ------------------------------------------------------ |
+| orientation         | string        | Where the player will appear on detach                  | 'bottom-left', 'top-left', 'bottom-right', 'top-right' |
+| detachOnStart       | bool          | automatically detach when player starts to play         | -                                                      |
+| width               | number        | player width on detach                                  | -                                                      |
+| height              | number        | player height on detach                                 | -                                                      |
+| onDetach            | function      | callback called when player detach from original place  | -                                                      |
+| onAttach            | function      | callback called when player attach on original place    | -                                                      |
