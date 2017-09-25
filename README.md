@@ -1,6 +1,8 @@
-# WIP
-# Clappr-Detach-Plugin
-  A clappr plugin to detach video from screen
+# clappr-detach-plugin
+
+A clappr plugin to detach video from screen
+
+
 
 ## Installing
   TODO
@@ -9,7 +11,7 @@
 ``` javascript
 import ClapprDetachPlugin from 'clappr-detach-plugin'
 
-const Player = new Clappr.Player({
+const player = new Clappr.Player({
   source: 'http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4',
 
   plugins: {
@@ -32,7 +34,7 @@ You can also configure plugin behavior using `detachOptions` with following opti
 ``` javascript
 import ClapprDetachPlugin from 'clappr-detach-plugin'
 
-const Player = new Clappr.Player({
+const player = new Clappr.Player({
   source: 'http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4',
 
   plugins: {
@@ -47,16 +49,6 @@ const Player = new Clappr.Player({
     onDetach: () => { console.log('Detached!') }
   }
 })
+
+player.getPlugin('detach').detach()
 ```
-
-## Contributing
-
-First of all, **thank you** for wanting to help!
-
-1. [Fork it](https://help.github.com/articles/fork-a-repo).
-2. Create a feature branch - `git checkout -b more_magic`
-3. Add tests and make your changes
-4. Check if tests are ok - `npm test`
-5. Commit changes - `git commit -am "Added more magic"`
-6. Push to Github - `git push origin more_magic`
-7. Send a [pull request](https://help.github.com/articles/using-pull-requests)! :heart: :sparkling_heart: :heart:

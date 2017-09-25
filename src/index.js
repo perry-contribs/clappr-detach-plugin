@@ -6,16 +6,16 @@ import $ from 'clappr-zepto/zepto'
 import setupInteractions from './interactions'
 
 // assets
-import detachMediaControlButton from './assets/detach-media-control-button.html'
-import detachPlaceholder from './assets/detach-placeholder.html'
 import detachIcon from './assets/detach-icon.svg'
+import detachPlaceholder from './assets/detach-placeholder.html'
+import detachToggle from './assets/detach-toggle.html'
 import detachStyle from './assets/detach.css'
+
+const NOOP = () => {}
 
 const DETACH_STYLE_TAG = Styler.getStyleFor(detachStyle)
 
 const DEFAULT_POSTER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
-
-const NOOP = () => {}
 
 const DEFAULT_OPTIONS = {
   orientation: 'bottom-left',
@@ -27,14 +27,14 @@ const DEFAULT_OPTIONS = {
   onDetach: NOOP,
 }
 
-const iconMarkup = template(detachIcon)()
+const DETACH_ICON_SVG = template(detachIcon)()
 
-const mediaControlButtonMarkup = template(detachMediaControlButton)({
-  icon: iconMarkup,
+const DETACH_TOGGLE_HTML = template(detachToggle)({
+  icon: DETACH_ICON_SVG,
 })
 
 const placeholderMarkup = (poster = DEFAULT_POSTER) => template(detachPlaceholder)({
-  icon: iconMarkup,
+  icon: DETACH_ICON_SVG,
   backgroundImage: poster,
 })
 
@@ -70,10 +70,18 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
   /* eslint-enable class-methods-use-this */
 
+  // clappr uses this - to expose like player.getPlugin('detach').detach()
+  getExternalInterface() {
+    return {
+      attach: this.attach,
+      detach: this.detach,
+    }
+  }
+
   constructor(core) {
     super(core)
 
-    this.initOptions(this.core.options.detachOptions)
+    this.mergeOptions(this.core.options.detachOptions)
 
     if (core.ready) {
       this.onCoreReady()
@@ -86,6 +94,9 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     ---------------------------------------------------------------------------
     elements
     ---------------------------------------------------------------------------
+  */
+  /*
+    initialize references to some elements that later we will use a lot
   */
   initElements() {
     this.initMiniPlayerContainerElement()
@@ -135,13 +146,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   initMainPlayerContainerPlaceholderElement() {
     this.$mainPlayerPlaceholder.empty()
-
-    // TODO rafael - colocar esses eventos?
-    // this.$mainPlayerPlaceholder.find('.clappr-detach__placeholder-icon').off('click', this.toggleDetach)
-    // this.$mainPlayerPlaceholder.html(placeholderMarkup(this.core.options.poster))
-    // this.$mainPlayerPlaceholder.find('.clappr-detach__placeholder-icon').on('click', this.toggleDetach)
     this.$mainPlayerPlaceholder.append(placeholderMarkup(this.core.options.poster))
-
     this.$mainPlayerPlaceholder.append(DETACH_STYLE_TAG)
   }
 
@@ -191,15 +196,15 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     options
     ---------------------------------------------------------------------------
   */
-  initOptions(customOptions) {
-    this.opts = {
+  mergeOptions(customOptions) {
+    this.mergedOptions = {
       ...DEFAULT_OPTIONS,
       ...customOptions,
     }
   }
 
   get options() {
-    return this.opts
+    return this.mergedOptions
   }
 
   onOptionsChange() {
@@ -212,7 +217,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     ---------------------------------------------------------------------------
   */
   onCoreFullScreen(goingToFullScreen) {
-    this.mediaControlDetachButton.toggle(!goingToFullScreen)
+    this.mediaControlDetachToggle.toggle(!goingToFullScreen)
 
     if (!goingToFullScreen) {
       if (this.isDetached) {
@@ -236,22 +241,17 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   */
   get clickToPausePlugin() { return this.core.containers[0].getPlugin('click_to_pause') }
   get mediaControl() { return this.core.mediaControl }
-  get mediaControlDetachButton() { return this.mediaControl.$el.find('.clappr-detach__media-control-button') }
+  get mediaControlDetachToggle() { return this.mediaControl.$el.find('[data-js="clappr-detach__detach-toggle"]') }
   get mediaControlRightPanel() { return this.mediaControl.$el.find('.media-control-right-panel') }
   get mediaControlSeekBar() { return this.mediaControl.$el.find('.media-control-center-panel') }
 
+  /*
+    adds the toggle detach button to the media control
+  */
   onMediaControlRendered() {
     this.mediaControl.setKeepVisible(true)
-    this.mediaControlRightPanel.append(mediaControlButtonMarkup)
-    this.mediaControlDetachButton.on('click', this.toggleDetach)
-  }
-
-  enablePauseClick() {
-    this.clickToPausePlugin.enable()
-  }
-
-  disablePauseClick() {
-    this.clickToPausePlugin.disable()
+    this.mediaControlRightPanel.append(DETACH_TOGGLE_HTML)
+    this.mediaControlDetachToggle.on('click', this.toggleDetach)
   }
 
   /*
@@ -284,6 +284,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   enableMiniPlayer() {
+    this.$miniPlayerContainer.show()
     this.mediaControlSeekBar.hide()
     this.moveToMiniPlayerContainer()
 
@@ -298,6 +299,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   disableMiniPlayer() {
     this.mediaControlSeekBar.show()
+    this.$miniPlayerContainer.hide()
     this.moveToMainPlayerContainer()
     this.resetMiniPlayerPosition()
     this.$player.attr('style', this.mainPlayerOriginalStyle)
@@ -325,37 +327,9 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   /*
     ---------------------------------------------------------------------------
-    drag
-    ---------------------------------------------------------------------------
-  */
-  enablePlayerDrag() {
-    this.disablePauseClick()
-    setupInteractions(this.$miniPlayerContainer[0], {
-      drag: true,
-      drop: {
-        dropAreaElement: this.$mainPlayerPlaceholder[0],
-        onDrop: this.attach,
-      },
-    })
-  }
-
-  disablePlayerDrag() {
-    this.enablePauseClick()
-  }
-
-  /*
-    ---------------------------------------------------------------------------
     attach / detach
     ---------------------------------------------------------------------------
   */
-  // clappr uses this
-  getExternalInterface() {
-    return {
-      detach: this.detach,
-      attach: this.attach,
-    }
-  }
-
   toggleDetach = () => {
     if (this.isDetached) {
       this.attach()
@@ -372,7 +346,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
     const isPlaying = this.currentContainer.isPlaying()
 
-    this.disablePlayerDrag()
+    this.clickToPausePlugin.enable()
     this.hidePlaceholder()
     this.disableMiniPlayer()
 
@@ -398,7 +372,14 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.mainPlayerOriginalStyle = this.$player.attr('style')
 
     this.hidePlayer()
-    this.enablePlayerDrag()
+    this.clickToPausePlugin.disable()
+    setupInteractions(this.$miniPlayerContainer[0], {
+      drag: true,
+      drop: {
+        dropAreaElement: this.$mainPlayerPlaceholder[0],
+        onDrop: this.attach,
+      },
+    })
     this.enableMiniPlayer()
     this.showPlaceholder()
 
