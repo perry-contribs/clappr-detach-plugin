@@ -6,11 +6,13 @@ import interact from 'interact.js'
 
 const draggableAreaClassName = 'clappr-detach__draggable-area'
 
-const createDraggableBoundary = () => {
-  const draggableBoundary = document.createElement('div')
-  draggableBoundary.className = draggableAreaClassName
+let $draggableBoundary
 
-  $(draggableBoundary).css({
+const createDraggableBoundary = () => {
+  $draggableBoundary = $('<div>')
+  $draggableBoundary.addClass = draggableAreaClassName
+
+  $draggableBoundary.css({
     position: 'fixed',
     top: '5vh',
     left: '5vw',
@@ -19,16 +21,14 @@ const createDraggableBoundary = () => {
     pointerEvents: 'none',
   })
 
-  $('body').prepend(draggableBoundary)
+  $('body').prepend($draggableBoundary)
 
-  return draggableBoundary
+  return $draggableBoundary[0]
 }
 
 const getDraggableBoundary = () => {
-  const draggableBoundary = $(`.${draggableAreaClassName}`)
-
-  if (draggableBoundary.length > 0) {
-    return draggableBoundary[0]
+  if ($draggableBoundary) {
+    return $draggableBoundary[0]
   }
 
   return createDraggableBoundary()
