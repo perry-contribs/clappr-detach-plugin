@@ -191,9 +191,10 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.$mainPlayerContainer.append(this.$mainPlayerPlaceholder[0])
 
     // save mainPlayer original styles to reset back to it when needed
-    this.mainPlayerOriginalStyle = this.$player.attr('style')
+    this.playerOriginalStyle = this.$player.attr('style')
+
     // set the mainPlayerPlaceholder styles based on the mainPlayer styles
-    this.$mainPlayerPlaceholder.attr('style', this.mainPlayerOriginalStyle)
+    this.$mainPlayerPlaceholder.attr('style', this.playerOriginalStyle)
   }
 
   onContainerPlay() {
@@ -250,7 +251,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     if (isDetached) {
       this.$player.css(PLAYER_DETACHED_STYLE)
     } else {
-      this.$player.attr('style', this.mainPlayerOriginalStyle)
+      this.$player.attr('style', this.playerOriginalStyle)
     }
   }
 
