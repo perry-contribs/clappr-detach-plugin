@@ -63,7 +63,6 @@ const player = new Clappr.Player({
   },
   // these are the default values
   detachOptions: {
-    detachOnStart: false,
     height: 180,
     isDetached: false,
     onAttach: () => { },
@@ -77,7 +76,6 @@ const player = new Clappr.Player({
 
 | Property            | Type          | Description                                             | valid values                                           |
 | ------------------- | ------------- | ------------------------------------------------------- | ------------------------------------------------------ |
-| detachOnStart       | bool          | automatically detach when player starts to play         | -                                                      |
 | height              | number        | player height on detach                                 | -                                                      |
 | isDetached          | bool          | whether you want to start the player detached           | -                                                      |
 | onAttach            | function      | callback called when player attach on original place    | -                                                      |

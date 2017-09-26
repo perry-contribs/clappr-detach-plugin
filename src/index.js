@@ -23,7 +23,6 @@ const DEFAULT_OPTIONS = {
   opacity: 1,
   width: 320,
   height: 180,
-  detachOnStart: false,
   onAttach: NOOP,
   onDetach: NOOP,
 }
@@ -186,7 +185,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
   onCoreReady() {
     this.initElements()
-    this.listenTo(this.currentContainer, Events.CONTAINER_PLAY, this.onContainerPlay)
 
     // clean up any element that might conflict with the placeholder
     this.$mainPlayerContainer.find(this.className).remove()
@@ -200,13 +198,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
     if (this.getOptions().isDetached) {
       this.toggleDetach(true)
-    }
-  }
-
-  onContainerPlay() {
-    if (!this.alreadyDetachedOnStart && this.getOptions().detachOnStart) {
-      this.alreadyDetachedOnStart = true
-      this.detach()
     }
   }
 
