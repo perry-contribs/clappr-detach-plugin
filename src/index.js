@@ -18,6 +18,7 @@ const DETACH_STYLE_TAG = Styler.getStyleFor(detachStyle)
 const DEFAULT_POSTER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
 
 const DEFAULT_OPTIONS = {
+  isDetached: false,
   orientation: 'bottom-right',
   opacity: 1,
   width: 320,
@@ -82,14 +83,6 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   constructor(core) {
     super(core)
 
-    if (!this.core.options.detachOptions) {
-      this.core.options.detachOptions = {}
-    }
-
-    this.mergeOptions(this.core.options.detachOptions)
-
-    this.isDetached = this.options.isDetached
-
     if (core.ready) {
       this.onCoreReady()
     }
@@ -100,17 +93,19 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     options
     ---------------------------------------------------------------------------
   */
-  mergeOptions(customOptions) {
-    this.mergedOptions = {
+  getOptions() {
+    return {
       ...DEFAULT_OPTIONS,
-      ...customOptions,
+      ...this.core.options.detachOptions,
     }
   }
 
-  get options() {
-    return this.mergedOptions
+  setOptions(options) {
+    $.extend(this.core.options.detachOptions, options)
   }
 
+  // when this function is called, `this.core.options.detachOptions` was already changed by clappr,
+  // so we can use the new value
   onOptionsChange() {
     this.toggleDetach(this.core.options.isDetached)
     this.initElements()
@@ -203,13 +198,13 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     // set the mainPlayerPlaceholder styles based on the mainPlayer styles
     this.$mainPlayerPlaceholder.attr('style', this.playerOriginalStyle)
 
-    if (this.options.isDetached) {
+    if (this.getOptions().isDetached) {
       this.toggleDetach(true)
     }
   }
 
   onContainerPlay() {
-    if (!this.alreadyDetachedOnStart && this.options.detachOnStart) {
+    if (!this.alreadyDetachedOnStart && this.getOptions().detachOnStart) {
       this.alreadyDetachedOnStart = true
       this.detach()
     }
@@ -229,7 +224,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
     // the timeout is needed to delay the execution until the fullscreen has finished quiting
     setTimeout(() => {
-      this.updatePlayer(this.isDetached)
+      this.updatePlayer(this.getOptions().isDetached)
     })
   }
 
@@ -250,7 +245,9 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   onMediaControlRendered() {
     this.mediaControl.setKeepVisible(true)
     this.mediaControlRightPanel.append(DETACH_TOGGLE_HTML)
-    this.mediaControlDetachToggle.on('click', () => this.toggleDetach(!this.isDetached))
+    this.mediaControlDetachToggle.on('click', () => {
+      this.toggleDetach(!this.getOptions().isDetached)
+    })
   }
 
   /*
@@ -286,7 +283,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     ---------------------------------------------------------------------------
   */
   get miniPlayerOptions() {
-    const { orientation, ...options } = this.options
+    const { orientation, ...options } = this.getOptions()
     return { ...options, ...orientationOptions(orientation) }
   }
 
@@ -318,7 +315,9 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     ---------------------------------------------------------------------------
   */
   toggleDetach = (isDetached) => {
-    this.isDetached = isDetached
+    this.setOptions({
+      isDetached,
+    })
     const isPlaying = this.currentContainer.isPlaying()
 
     this.updatePlayer(isDetached)
@@ -328,11 +327,11 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     if (isDetached) {
       this.movePlayerToMiniPlayer()
       this.clickToPausePlugin.disable()
-      this.options.onDetach()
+      this.getOptions().onDetach()
     } else {
       this.movePlayerToMainPlayer()
       this.clickToPausePlugin.enable()
-      this.options.onAttach()
+      this.getOptions().onAttach()
     }
 
     // when the player is moved while playing, it becomes paused. So we restore the playing
@@ -342,14 +341,14 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   attach = () => {
-    if (!this.isDetached) {
+    if (!this.getOptions().isDetached) {
       return
     }
     this.toggleDetach(false)
   }
 
   detach = () => {
-    if (this.isDetached) {
+    if (this.getOptions().isDetached) {
       return
     }
     this.toggleDetach(true)

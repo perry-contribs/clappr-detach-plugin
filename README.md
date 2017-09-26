@@ -43,6 +43,13 @@ player.getPlugin('detach').detach()
 player.getPlugin('detach').attach()
 ```
 
+Or using the player `configure` method:
+
+```javascript
+player.configure({ isDetached: true })
+player.configure({ isDetached: false })
+```
+
 
 ## Options
 
@@ -56,22 +63,24 @@ const player = new Clappr.Player({
   },
   // these are the default values
   detachOptions: {
-    orientation: 'bottom-right',
-    opacity: 1,
-    width: 320,
-    height: 180,
     detachOnStart: false,
+    height: 180,
+    isDetached: false,
     onAttach: () => { },
     onDetach: () => { }
+    opacity: 1,
+    orientation: 'bottom-right',
+    width: 320,
   }
 })
 ```
 
 | Property            | Type          | Description                                             | valid values                                           |
 | ------------------- | ------------- | ------------------------------------------------------- | ------------------------------------------------------ |
-| orientation         | string        | Where the player will appear on detach                  | 'bottom-left', 'top-left', 'bottom-right', 'top-right' |
 | detachOnStart       | bool          | automatically detach when player starts to play         | -                                                      |
-| width               | number        | player width on detach                                  | -                                                      |
 | height              | number        | player height on detach                                 | -                                                      |
-| onDetach            | function      | callback called when player detach from original place  | -                                                      |
+| isDetached          | bool          | whether you want to start the player detached           | -                                                      |
 | onAttach            | function      | callback called when player attach on original place    | -                                                      |
+| onDetach            | function      | callback called when player detach from original place  | -                                                      |
+| orientation         | string        | Where the player will appear on detach                  | 'bottom-left', 'top-left', 'bottom-right', 'top-right' |
+| width               | number        | player width on detach                                  | -                                                      |
