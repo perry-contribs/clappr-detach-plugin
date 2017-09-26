@@ -82,7 +82,13 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   constructor(core) {
     super(core)
 
+    if (!this.core.options.detachOptions) {
+      this.core.options.detachOptions = {}
+    }
+
     this.mergeOptions(this.core.options.detachOptions)
+
+    this.isDetached = this.options.isDetached
 
     if (core.ready) {
       this.onCoreReady()
@@ -106,6 +112,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   onOptionsChange() {
+    this.toggleDetach(this.core.options.isDetached)
     this.initElements()
   }
 
@@ -195,6 +202,10 @@ export default class ClapprDetachPlugin extends UICorePlugin {
 
     // set the mainPlayerPlaceholder styles based on the mainPlayer styles
     this.$mainPlayerPlaceholder.attr('style', this.playerOriginalStyle)
+
+    if (this.options.isDetached) {
+      this.toggleDetach(true)
+    }
   }
 
   onContainerPlay() {
@@ -310,9 +321,9 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     this.isDetached = isDetached
     const isPlaying = this.currentContainer.isPlaying()
 
+    this.updatePlayer(isDetached)
     this.updateMiniPlayer(isDetached)
     this.updateMainPlayer(isDetached)
-    this.updatePlayer(isDetached)
 
     if (isDetached) {
       this.movePlayerToMiniPlayer()
