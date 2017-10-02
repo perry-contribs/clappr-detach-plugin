@@ -50,5 +50,8 @@
     "plugins": [
       "babel-plugin-add-module-exports"
     ]
+  },
+  "dependencies": {
+    "lodash.assign": "^4.2.0"
   }
 }

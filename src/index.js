@@ -1,6 +1,7 @@
 /* eslint-disable import/extensions, import/no-unresolved */
 import { UICorePlugin, Events, Styler, template } from 'clappr'
 import $ from 'clappr-zepto/zepto'
+import assign from 'lodash.assign'
 /* eslint-enable import/extensions, import/no-unresolved */
 
 import setupInteractions from './interactions'
@@ -100,7 +101,7 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   setOptions(options) {
-    $.extend(this.core.options.detachOptions, options)
+    assign(this.core.options.detachOptions, options)
   }
 
   // when this function is called, `this.core.options.detachOptions` was already changed by clappr,
