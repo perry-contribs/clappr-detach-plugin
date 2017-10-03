@@ -18,7 +18,6 @@ This project requires you to provide the following peerDependencies:
 ```
 "peerDependencies": {
   "clappr": "^0.2.73",
-  "clappr-zepto": "0.0.7"
 },
 ```
 

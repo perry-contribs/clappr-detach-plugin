@@ -37,11 +37,5 @@ module.exports = {
       amd: 'clappr',
       root: 'Clappr',
     },
-    'clappr-zepto/zepto': {
-      commonjs: 'clappr-zepto/zepto',
-      commonjs2: 'clappr-zepto/zepto',
-      amd: 'clappr-zepto/zepto',
-      root: '$',
-    },
   },
 }

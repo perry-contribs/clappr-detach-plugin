@@ -1,9 +1,8 @@
 /* eslint-disable import/extensions, import/no-unresolved */
 import { UICorePlugin, Events, Styler, template } from 'clappr'
-import $ from 'clappr-zepto/zepto'
-import assign from 'lodash.assign'
 /* eslint-enable import/extensions, import/no-unresolved */
 
+import assign from 'lodash.assign'
 import setupInteractions from './interactions'
 
 // assets
@@ -11,6 +10,14 @@ import detachIcon from './assets/detach-icon.svg'
 import detachPlaceholder from './assets/detach-placeholder.html'
 import detachToggle from './assets/detach-toggle.html'
 import detachStyle from './assets/detach.css'
+
+const toggleElement = (element, show) => {
+  if (show) {
+    element.style.display = '' // eslint-disable-line no-param-reassign
+  } else {
+    element.style.display = 'none' // eslint-disable-line no-param-reassign
+  }
+}
 
 const NOOP = () => {}
 
@@ -126,29 +133,36 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   /*
-    $player is the player itself, that gets moved between the $mainPlayerContainer and $miniPlayerContainer.
-    We don't instantiate $player, Clappr does
+    (jQuery element) $player is the player itself, that gets moved between the
+    $mainPlayerContainer and $miniPlayerContainer. We don't instantiate $player, Clappr does
   */
   get $player() { return this.core.$el }
 
   /*
-    $miniPlayerContainer is the element we move the $player to when it is detached
+    (DOM node) $miniPlayerContainer is the element we move the $player to when it is detached.
+    This is not a jQuery element because we create it ourselves, and we don't want to have jQuery as dependency.
   */
   initMiniPlayerContainerElement() {
     if (this.$miniPlayerContainer) {
       return
     }
 
-    const el = $('<div>')
-    el.addClass('clappr-detach__wrapper')
-    $('body').append(el)
+    this.$miniPlayerContainer = document.createElement('div')
+    this.$miniPlayerContainer.classList.add('clappr-detach__wrapper')
+    document.body.append(this.$miniPlayerContainer)
 
-    this.$miniPlayerContainer = el
-    this.$miniPlayerContainer.css(this.miniPlayerOptions)
+    const options = this.miniPlayerOptions
+    this.$miniPlayerContainer.style.opacity = `${options.opacity}`
+    this.$miniPlayerContainer.style.height = `${options.height}px`
+    this.$miniPlayerContainer.style.width = `${options.width}px`
+    this.$miniPlayerContainer.style.left = `${options.left}px`
+    this.$miniPlayerContainer.style.right = `${options.right}px`
+    this.$miniPlayerContainer.style.top = `${options.top}px`
+    this.$miniPlayerContainer.style.bottom = `${options.bottom}px`
   }
 
   /*
-    $mainPlayerContainer is the element where the $player was originaly put in.
+    (jQuery element) $mainPlayerContainer is the element where the $player was originaly put in.
     When we attach back the player, we move it to $mainPlayerContainer
   */
   initMainPlayerContainerElement() {
@@ -162,7 +176,8 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   /*
-    $mainPlayerPlaceholder is the element we put a placeholder in when we detach the player to the $miniPlayerContainer
+    (jQuery element) $mainPlayerPlaceholder is the element we put a placeholder in when
+    we detach the player to the $miniPlayerContainer
   */
   get $mainPlayerPlaceholder() { return this.$el }
 
@@ -284,14 +299,11 @@ export default class ClapprDetachPlugin extends UICorePlugin {
   }
 
   updateMiniPlayer(isDetached) {
-    this.$miniPlayerContainer.css({
-      transform: 'translate(0, 0)',
-    })
-
-    this.$miniPlayerContainer.toggle(isDetached)
+    this.$miniPlayerContainer.style.transform = 'translate(0, 0)'
+    toggleElement(this.$miniPlayerContainer, isDetached)
 
     if (isDetached) {
-      setupInteractions(this.$miniPlayerContainer[0], {
+      setupInteractions(this.$miniPlayerContainer, {
         drag: true,
         drop: {
           dropAreaElement: this.$mainPlayerPlaceholder[0],

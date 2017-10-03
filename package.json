@@ -39,8 +39,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "peerDependencies": {
-    "clappr": "^0.2.73",
-    "clappr-zepto": "0.0.7"
+    "clappr": "^0.2.73"
   },
   "babel": {
     "presets": [
