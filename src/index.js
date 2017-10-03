@@ -3,7 +3,9 @@ import { UICorePlugin, Events, Styler, template } from 'clappr'
 /* eslint-enable import/extensions, import/no-unresolved */
 
 import assign from 'lodash.assign'
+
 import setupInteractions from './interactions'
+import { addDragArea, removeDragArea } from './drag'
 
 // assets
 import detachIcon from './assets/detach-icon.svg'
@@ -303,13 +305,18 @@ export default class ClapprDetachPlugin extends UICorePlugin {
     toggleElement(this.$miniPlayerContainer, isDetached)
 
     if (isDetached) {
+      const dragArea = addDragArea()
       setupInteractions(this.$miniPlayerContainer, {
-        drag: true,
+        drag: {
+          dragArea,
+        },
         drop: {
           dropAreaElement: this.$mainPlayerPlaceholder[0],
           onDrop: this.attach,
         },
       })
+    } else {
+      removeDragArea()
     }
   }
 

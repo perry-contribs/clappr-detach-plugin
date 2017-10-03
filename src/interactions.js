@@ -1,24 +1,5 @@
 import interact from 'interact.js'
 
-const draggableAreaClassName = 'clappr-detach__draggable-area'
-
-let elDraggableArea
-
-const createDraggableBoundary = () => {
-  elDraggableArea = document.createElement('div')
-  elDraggableArea.classList.add(draggableAreaClassName)
-  document.body.prepend(elDraggableArea)
-  return elDraggableArea
-}
-
-const getDraggableBoundary = () => {
-  if (elDraggableArea) {
-    return elDraggableArea
-  }
-
-  return createDraggableBoundary()
-}
-
 const onStart = (event) => {
   const { target } = event
   target.style.transition = 'none'
@@ -44,25 +25,21 @@ const onMove = (event) => {
   target.setAttribute('data-y', y)
 }
 
-const setupDrag = (element) => {
-  const draggableBoundary = getDraggableBoundary()
-
-  interact(element)
-    .draggable({
-      enagle: true,
-      inertia: true,
-      autoScroll: false,
-      restrict: {
-        restriction: draggableBoundary,
-        endOnly: true,
-        elementRect: {
-          top: 0, left: 0, bottom: 1, right: 1,
-        },
+const setupDrag = (element, { dragArea }) => interact(element)
+  .draggable({
+    enagle: true,
+    inertia: true,
+    autoScroll: false,
+    restrict: {
+      restriction: dragArea,
+      endOnly: true,
+      elementRect: {
+        top: 0, left: 0, bottom: 1, right: 1,
       },
-      onstart: onStart,
-      onmove: onMove,
-    })
-}
+    },
+    onstart: onStart,
+    onmove: onMove,
+  })
 
 const setupDrop = (element, { dropAreaElement, onDrop }) => {
   const elementSelector = `.${element.className}`
@@ -77,7 +54,7 @@ const setupDrop = (element, { dropAreaElement, onDrop }) => {
 
 const setupInteractions = (element, { drag, drop }) => {
   if (drag) {
-    setupDrag(element)
+    setupDrag(element, drag)
   }
   if (drop) {
     setupDrop(element, drop)
