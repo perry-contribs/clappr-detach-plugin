@@ -1,7 +1,3 @@
-/* eslint-disable import/extensions, import/no-unresolved */
-import $ from 'clappr-zepto/zepto'
-/* eslint-enable import/extensions, import/no-unresolved */
-
 import interact from 'interact.js'
 
 const draggableAreaClassName = 'clappr-detach__draggable-area'
@@ -9,26 +5,15 @@ const draggableAreaClassName = 'clappr-detach__draggable-area'
 let $draggableBoundary
 
 const createDraggableBoundary = () => {
-  $draggableBoundary = $('<div>')
-  $draggableBoundary.addClass = draggableAreaClassName
-
-  $draggableBoundary.css({
-    position: 'fixed',
-    top: '5vh',
-    left: '5vw',
-    width: '90vw',
-    height: '90vh',
-    pointerEvents: 'none',
-  })
-
-  $('body').prepend($draggableBoundary)
-
-  return $draggableBoundary[0]
+  $draggableBoundary = document.createElement('div')
+  $draggableBoundary.classList.add(draggableAreaClassName)
+  document.body.prepend($draggableBoundary)
+  return $draggableBoundary
 }
 
 const getDraggableBoundary = () => {
   if ($draggableBoundary) {
-    return $draggableBoundary[0]
+    return $draggableBoundary
   }
 
   return createDraggableBoundary()

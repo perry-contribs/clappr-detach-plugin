@@ -65,3 +65,12 @@
   height: 180px;
   width: 320px;
 }
+
+.clappr-detach__draggable-area {
+  position: fixed;
+  top: 5vh;
+  left: 5vw;
+  width: 90vw;
+  height: 90vh;
+  pointer-events: none;
+}
