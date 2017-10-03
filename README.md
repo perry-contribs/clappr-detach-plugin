@@ -13,24 +13,28 @@ This project is a fork from https://github.com/team-767/clappr-detach-plugin. Th
 npm install -S clappr-detach-plugin
 ```
 
-This project requires you to provide the following peerDependencies:
+To init the plugin you have to pass it the Clappr instance, in a version compatible with 0.2.73.
 
 ```
-"peerDependencies": {
-  "clappr": "^0.2.73",
-},
+import Clappr from 'clappr'
+import initClapprDetachPlugin from 'clappr-detach-plugin'
+
+const detachPlugin = initClapprDetachPlugin(Clappr)
 ```
+
+We did it this way so the plugin will receive the dependency and doesn't have to install it.
 
 
 ## Usage
 
 ```javascript
-import ClapprDetachPlugin from 'clappr-detach-plugin'
+import Clappr from 'clappr'
+import initClapprDetachPlugin from 'clappr-detach-plugin'
 
 const player = new Clappr.Player({
   source: 'http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4',
   plugins: {
-    'core': [ClapprDetachPlugin]
+    'core': [initClapprDetachPlugin(Clappr)]
   }
 })
 ```
@@ -53,12 +57,13 @@ player.configure({ isDetached: false })
 ## Options
 
 ```javascript
-import ClapprDetachPlugin from 'clappr-detach-plugin'
+import Clappr from 'clappr'
+import initClapprDetachPlugin from 'clappr-detach-plugin'
 
 const player = new Clappr.Player({
   source: 'http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4',
   plugins: {
-    'core': [ClapprDetachPlugin]
+    'core': [initClapprDetachPlugin(Clappr)]
   },
   // these are the default values
   detachOptions: {

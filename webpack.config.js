@@ -30,12 +30,4 @@ module.exports = {
   resolve: {
     extensions: ['', '.js'],
   },
-  externals: {
-    clappr: {
-      commonjs: 'clappr',
-      commonjs2: 'clappr',
-      amd: 'clappr',
-      root: 'Clappr',
-    },
-  },
 }
