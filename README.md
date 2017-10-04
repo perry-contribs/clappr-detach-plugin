@@ -13,7 +13,9 @@ This project is a fork from https://github.com/team-767/clappr-detach-plugin. Th
 npm install -S clappr-detach-plugin
 ```
 
-To init the plugin you have to pass it the Clappr instance, in a version compatible with 0.2.73.
+## Usage
+
+To init the plugin you have to pass it the Clappr object. See bellow the compatibility between this plugin and Clappr versions.
 
 ```
 import Clappr from 'clappr'
@@ -24,8 +26,7 @@ const detachPlugin = initClapprDetachPlugin(Clappr)
 
 We did it this way so the plugin will receive the dependency and doesn't have to install it.
 
-
-## Usage
+Full example:
 
 ```javascript
 import Clappr from 'clappr'
@@ -86,3 +87,14 @@ const player = new Clappr.Player({
 | onDetach            | function      | callback called when player detach from original place  | -                                                      |
 | orientation         | string        | Where the player will appear on detach                  | 'bottom-left', 'top-left', 'bottom-right', 'top-right' |
 | width               | number        | player width on detach                                  | -                                                      |
+
+
+## Compatibility
+
+This table **doesn't** mean that other versions won't work together.
+
+It **does** means that we are sure that these versions work together.
+
+| clappr | detachPlugin |
+| --- | --- |
+| 0.2.73 | 0.1.0 |

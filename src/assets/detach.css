@@ -9,13 +9,6 @@
   display: block;
 }
 
-.clappr-detach--detached[data-player] {
-  transition: opacity 1s ease;
-  transition: transform 0.5s ease-in-out;
-  /* TODO check whether this z-index value is good */
-  z-index: 99999;
-}
-
 .clappr-detach__icon * {
   fill: #FFF;
 }
