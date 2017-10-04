@@ -53,12 +53,14 @@ const setupDrop = (element, { dropAreaElement, onDrop }) => {
 }
 
 const setupInteractions = (element, { drag, drop }) => {
+  const result = {}
   if (drag) {
-    setupDrag(element, drag)
+    result.drag = setupDrag(element, drag)
   }
   if (drop) {
     setupDrop(element, drop)
   }
+  return result
 }
 
 export default setupInteractions

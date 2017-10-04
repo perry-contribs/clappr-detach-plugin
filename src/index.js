@@ -9,6 +9,8 @@ import detachPlaceholder from './assets/detach-placeholder.html'
 import detachToggle from './assets/detach-toggle.html'
 import detachStyle from './assets/detach.css'
 
+let dragInteractable
+
 const toggleElement = (element, show) => {
   if (show) {
     element.style.display = '' // eslint-disable-line no-param-reassign
@@ -307,18 +309,22 @@ const initPlugin = ({
       toggleElement(this.$miniPlayerContainer, isDetached)
 
       if (isDetached) {
-        const dragArea = addDragArea()
-        setupInteractions(this.$miniPlayerContainer, {
+        const result = setupInteractions(this.$miniPlayerContainer, {
           drag: {
-            dragArea,
+            dragArea: addDragArea(),
           },
           drop: {
             dropAreaElement: this.$mainPlayerPlaceholder[0],
             onDrop: this.attach,
           },
         })
+
+        dragInteractable = result.drag
       } else {
         removeDragArea()
+        if (dragInteractable) {
+          dragInteractable.unset()
+        }
       }
     }
 
