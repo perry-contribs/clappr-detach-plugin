@@ -256,7 +256,9 @@ const initPlugin = ({
       adds the toggle detach button to the media control
     */
     onMediaControlRendered() {
-      this.mediaControl.setKeepVisible(true)
+      if (this.mediaControl.setKeepVisible) {
+        this.mediaControl.setKeepVisible(true)
+      }
       this.mediaControlRightPanel.append(DETACH_TOGGLE_HTML)
       this.mediaControlDetachToggle.on('click', () => {
         this.toggleDetach(!this.getOptions().isDetached)
@@ -334,6 +336,9 @@ const initPlugin = ({
       ---------------------------------------------------------------------------
     */
     toggleDetach = (isDetached) => {
+      // ensure elements
+      this.initElements()
+
       this.setOptions({
         isDetached,
       })
