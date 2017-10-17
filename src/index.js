@@ -21,11 +21,17 @@ const toggleElement = (element, show) => {
 
 const NOOP = () => {}
 
+const DEFAULT_POSITION = 10
+
 const DEFAULT_POSTER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
 
 const DEFAULT_OPTIONS = {
   isDetached: false,
   orientation: 'bottom-right',
+  position: {
+    bottom: DEFAULT_POSITION,
+    right: DEFAULT_POSITION,
+  },
   opacity: 1,
   width: 320,
   height: 180,
@@ -33,14 +39,14 @@ const DEFAULT_OPTIONS = {
   onDetach: NOOP,
 }
 
-const orientationOptions = (orientation) => {
+const orientationOptions = (orientation, position) => {
   const options = {}
 
   orientation.split('-').forEach((side) => {
-    if (side === 'left') { options.left = 10 }
-    if (side === 'right') { options.right = 10 }
-    if (side === 'bottom') { options.bottom = 10 }
-    if (side === 'top') { options.top = 10 }
+    if (side === 'left') { options.left = position.left || DEFAULT_POSITION }
+    if (side === 'right') { options.right = position.right || DEFAULT_POSITION }
+    if (side === 'bottom') { options.bottom = position.bottom || DEFAULT_POSITION }
+    if (side === 'top') { options.top = position.top || DEFAULT_POSITION }
   })
 
   return options
@@ -298,8 +304,8 @@ const initPlugin = ({
       ---------------------------------------------------------------------------
     */
     get miniPlayerOptions() {
-      const { orientation, ...options } = this.getOptions()
-      return { ...options, ...orientationOptions(orientation) }
+      const { orientation, position, ...options } = this.getOptions()
+      return { ...options, ...orientationOptions(orientation, position) }
     }
 
     movePlayerToMiniPlayer() {
