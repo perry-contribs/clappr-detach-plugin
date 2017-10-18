@@ -4,6 +4,8 @@ import setupInteractions from './interactions'
 import { addDragArea, removeDragArea } from './drag'
 
 // assets
+import closeButton from './assets/close-button.html'
+import closeIcon from './assets/close-icon.svg'
 import detachIcon from './assets/detach-icon.svg'
 import detachPlaceholder from './assets/detach-placeholder.html'
 import detachToggle from './assets/detach-toggle.html'
@@ -37,6 +39,8 @@ const DEFAULT_OPTIONS = {
   height: 180,
   onAttach: NOOP,
   onDetach: NOOP,
+  showClose: true,
+  // onClose: has a default option, but can't be configured here, so it is configured inside the plugin instance
 }
 
 const orientationOptions = (orientation, position) => {
@@ -59,6 +63,12 @@ const initPlugin = ({
   template,
 }) => {
   const DETACH_STYLE_TAG = Styler.getStyleFor(detachStyle)
+
+  const CLOSE_ICON_SVG = template(closeIcon)()
+
+  const CLOSE_BUTTON_HTML = template(closeButton)({
+    icon: CLOSE_ICON_SVG,
+  })
 
   const DETACH_ICON_SVG = template(detachIcon)()
 
@@ -142,6 +152,7 @@ const initPlugin = ({
       this.initMiniPlayerContainerElement()
       this.initMainPlayerContainerElement()
       this.initMainPlayerContainerPlaceholderElement()
+      this.initCloseIconElement()
     }
 
     /*
@@ -197,6 +208,21 @@ const initPlugin = ({
       this.$mainPlayerPlaceholder.empty()
       this.$mainPlayerPlaceholder.append(placeholderMarkup(this.core.options.poster))
       this.$mainPlayerPlaceholder.append(DETACH_STYLE_TAG)
+    }
+
+    initCloseIconElement() {
+      if (!this.getOptions().showClose) {
+        return
+      }
+
+      if (this.closeButton[0]) {
+        return
+      }
+
+      this.$player.append(CLOSE_BUTTON_HTML)
+
+      const handler = this.getOptions().onClose || this.attach
+      this.closeButton.on('click', handler)
     }
 
     /*
@@ -303,6 +329,8 @@ const initPlugin = ({
       mini player container
       ---------------------------------------------------------------------------
     */
+    get closeButton() { return this.$player.find('[data-js="clappr-detach__close-button"]') }
+
     get miniPlayerOptions() {
       const { orientation, position, ...options } = this.getOptions()
       return { ...options, ...orientationOptions(orientation, position) }

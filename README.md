@@ -71,27 +71,31 @@ const player = new Clappr.Player({
     height: 180,
     isDetached: false,
     onAttach: () => { },
-    onDetach: () => { }
+    onClose: player.getPlugin('detach').attach(),
+    onDetach: () => { },
     opacity: 1,
     orientation: 'bottom-right',
     position: {
       bottom: 10,
       right: 10,
     },
+    showClose: true,
     width: 320,
   }
 })
 ```
 
-| Property            | Type          | Description                                             | valid values                                                          |
-| ------------------- | ------------- | ------------------------------------------------------- | --------------------------------------------------------------------- |
-| height              | number        | player height on detach                                 | -                                                                     |
-| isDetached          | bool          | whether you want to start the player detached           | -                                                                     |
-| onAttach            | function      | callback called when player attach on original place    | -                                                                     |
-| onDetach            | function      | callback called when player detach from original place  | -                                                                     |
-| orientation         | string        | Where the player will appear on detach                  | 'bottom-left', 'top-left', 'bottom-right', 'top-right'                |
-| position            | object        | Force the position where player will appear on detach   | `{"top": number, "right": number, "bottom": number, "left": number}`  |
-| width               | number        | player width on detach                                  | -                                                                     |
+| Property            | Type          | Description                                             | valid values                                                                                         |
+| ------------------- | ------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| height              | number        | player height on detach                                 | -                                                                                                    |
+| isDetached          | bool          | whether you want to start the player detached           | -                                                                                                    |
+| onAttach            | function      | callback called when player attach on original place    | -                                                                                                    |
+| onClose             | function      | callback called when user clicks on close icon ("X")    | -                                                                                                    |
+| onDetach            | function      | callback called when player detach from original place  | -                                                                                                    |
+| orientation         | string        | Where the player will appear on detach                  | 'bottom-left', 'top-left', 'bottom-right', 'top-right'                                               |
+| position            | object        | Force the position where player will appear on detach   | `{"top": number, "right": number, "bottom": number, "left": number}`                                 |
+| showClose           | bool          | whether to show close icon                              | -                                                                                                    |
+| width               | number        | player width on detach                                  | -                                                                                                    |
 
 
 ## Compatibility
