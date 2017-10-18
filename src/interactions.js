@@ -42,7 +42,7 @@ const setupDrag = (element, { dragArea }) => interact(element)
   })
 
 const setupDrop = (element, { dropAreaElement, onDrop }) => {
-  const elementSelector = `.${element.className}`
+  const elementSelector = '[data-player]'
 
   interact(dropAreaElement)
     .dropzone({

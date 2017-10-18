@@ -4,7 +4,7 @@ A [Clappr](https://github.com/clappr/clappr) plugin to detach the video.
 
 ![clappr-detach-plugin](https://user-images.githubusercontent.com/4842605/30820777-567d2960-a1f9-11e7-854a-32acc6cb0a47.png)
 
-This project is a fork from https://github.com/team-767/clappr-detach-plugin. The code was simplified and we published it to npm, but the main idea remains the same.
+This project is a fork from https://github.com/team-767/clappr-detach-plugin. We took a different approach that was done in that project.
 
 
 ## Installation

@@ -11,14 +11,6 @@ import detachStyle from './assets/detach.css'
 
 let dragInteractable
 
-const toggleElement = (element, show) => {
-  if (show) {
-    element.style.display = '' // eslint-disable-line no-param-reassign
-  } else {
-    element.style.display = 'none' // eslint-disable-line no-param-reassign
-  }
-}
-
 const NOOP = () => {}
 
 const DEFAULT_POSITION = 10
@@ -65,11 +57,6 @@ const initPlugin = ({
   const DETACH_TOGGLE_HTML = template(detachToggle)({
     icon: DETACH_ICON_SVG,
   })
-
-  const PLAYER_DETACHED_STYLE = {
-    height: '100%',
-    width: '100%',
-  }
 
   const placeholderMarkup = (poster = DEFAULT_POSTER) => template(detachPlaceholder)({
     icon: DETACH_ICON_SVG,
@@ -127,7 +114,6 @@ const initPlugin = ({
     // so we can use the new value
     onOptionsChange() {
       this.toggleDetach(this.core.options.isDetached)
-      this.initElements()
     }
 
     /*
@@ -139,64 +125,28 @@ const initPlugin = ({
       initialize references to some elements that later we will use a lot
     */
     initElements() {
-      this.initMiniPlayerContainerElement()
-      this.initMainPlayerContainerElement()
-      this.initMainPlayerContainerPlaceholderElement()
+      this.initPlayerContainerPlaceholderElement()
     }
 
     /*
-      (jQuery element) $player is the player itself, that gets moved between the
-      $mainPlayerContainer and $miniPlayerContainer. We don't instantiate $player, Clappr does
+      (jQuery element) $player is the player element itself. We don't instantiate $player, Clappr does
     */
     get $player() { return this.core.$el }
 
     /*
-      (DOM node) $miniPlayerContainer is the element we move the $player to when it is detached.
-      This is not a jQuery element because we create it ourselves, and we don't want to have jQuery as dependency.
+      (jQuery element) $playerContainer is the element where the $player is attached to when created
     */
-    initMiniPlayerContainerElement() {
-      if (this.$miniPlayerContainer) {
-        return
-      }
-
-      this.$miniPlayerContainer = document.createElement('div')
-      this.$miniPlayerContainer.classList.add('clappr-detach__wrapper')
-      document.body.append(this.$miniPlayerContainer)
-
-      const options = this.miniPlayerOptions
-      this.$miniPlayerContainer.style.opacity = `${options.opacity}`
-      this.$miniPlayerContainer.style.height = `${options.height}px`
-      this.$miniPlayerContainer.style.width = `${options.width}px`
-      this.$miniPlayerContainer.style.left = `${options.left}px`
-      this.$miniPlayerContainer.style.right = `${options.right}px`
-      this.$miniPlayerContainer.style.top = `${options.top}px`
-      this.$miniPlayerContainer.style.bottom = `${options.bottom}px`
-    }
+    get $playerContainer() { return this.$player.parent() }
 
     /*
-      (jQuery element) $mainPlayerContainer is the element where the $player was originaly put in.
-      When we attach back the player, we move it to $mainPlayerContainer
+      (jQuery element) $playerPlaceholder is the element we put a placeholder in when we detach the player
     */
-    initMainPlayerContainerElement() {
-      // When $player is mounted in the DOM (after Events.CORE_READY), we keep a reference to the parent.
-      // Since $player may be removed later, it may not have a parent later, so we keep the reference.
-      if (this.$mainPlayerContainer || !this.$player.parent()[0]) {
-        return
-      }
+    get $playerPlaceholder() { return this.$el }
 
-      this.$mainPlayerContainer = this.$player.parent()
-    }
-
-    /*
-      (jQuery element) $mainPlayerPlaceholder is the element we put a placeholder in when
-      we detach the player to the $miniPlayerContainer
-    */
-    get $mainPlayerPlaceholder() { return this.$el }
-
-    initMainPlayerContainerPlaceholderElement() {
-      this.$mainPlayerPlaceholder.empty()
-      this.$mainPlayerPlaceholder.append(placeholderMarkup(this.core.options.poster))
-      this.$mainPlayerPlaceholder.append(DETACH_STYLE_TAG)
+    initPlayerContainerPlaceholderElement() {
+      this.$playerPlaceholder.empty()
+      this.$playerPlaceholder.append(placeholderMarkup(this.core.options.poster))
+      this.$playerPlaceholder.append(DETACH_STYLE_TAG)
     }
 
     /*
@@ -215,14 +165,14 @@ const initPlugin = ({
       this.initElements()
 
       // clean up any element that might conflict with the placeholder
-      this.$mainPlayerContainer.find(this.className).remove()
-      this.$mainPlayerContainer.append(this.$mainPlayerPlaceholder[0])
+      this.$playerContainer.find(this.className).remove()
+      this.$playerContainer.append(this.$playerPlaceholder[0])
 
-      // save mainPlayer original styles to reset back to it when needed
+      // save player original styles to reset back to it when needed
       this.playerOriginalStyle = this.$player.attr('style')
 
-      // set the mainPlayerPlaceholder styles based on the mainPlayer styles
-      this.$mainPlayerPlaceholder.attr('style', this.playerOriginalStyle)
+      // set the playerPlaceholder styles based on the player styles
+      this.$playerPlaceholder.attr('style', this.playerOriginalStyle)
 
       if (this.getOptions().isDetached) {
         this.toggleDetach(true)
@@ -277,58 +227,35 @@ const initPlugin = ({
       ---------------------------------------------------------------------------
     */
     updatePlayer(isDetached) {
-      if (isDetached) {
-        this.$player.css(PLAYER_DETACHED_STYLE)
-      } else {
-        this.$player.attr('style', this.playerOriginalStyle)
-      }
-    }
-
-    /*
-      ---------------------------------------------------------------------------
-      main player container
-      ---------------------------------------------------------------------------
-    */
-    movePlayerToMainPlayer() {
-      this.$mainPlayerContainer.append(this.$player[0])
-    }
-
-    updateMainPlayer(isDetached) {
       this.mediaControlSeekBar.toggle(!isDetached)
-      this.$mainPlayerPlaceholder.toggleClass('clappr-detach--visible', isDetached)
-    }
-
-    /*
-      ---------------------------------------------------------------------------
-      mini player container
-      ---------------------------------------------------------------------------
-    */
-    get miniPlayerOptions() {
-      const { orientation, position, ...options } = this.getOptions()
-      return { ...options, ...orientationOptions(orientation, position) }
-    }
-
-    movePlayerToMiniPlayer() {
-      this.$miniPlayerContainer.append(this.$player[0])
-    }
-
-    updateMiniPlayer(isDetached) {
-      this.$miniPlayerContainer.style.transform = 'translate(0, 0)'
-      toggleElement(this.$miniPlayerContainer, isDetached)
+      this.$playerPlaceholder.toggleClass('clappr-detach--visible', isDetached)
+      this.$player.toggleClass('clappr-detach--is-detached', isDetached)
+      this.$player[0].style.transform = 'translate(0, 0)'
 
       if (isDetached) {
-        const result = setupInteractions(this.$miniPlayerContainer, {
+        const options = this.detachedOptions
+        this.$player[0].style.opacity = `${options.opacity}`
+        this.$player[0].style.left = `${options.left}px`
+        this.$player[0].style.right = `${options.right}px`
+        this.$player[0].style.top = `${options.top}px`
+        this.$player[0].style.bottom = `${options.bottom}px`
+        this.$player[0].style.setProperty('width', `${options.width}px`, 'important')
+        this.$player[0].style.setProperty('height', `${options.height}px`, 'important')
+
+        const result = setupInteractions(this.$player[0], {
           drag: {
             dragArea: addDragArea(),
           },
           drop: {
-            dropAreaElement: this.$mainPlayerPlaceholder[0],
+            dropAreaElement: this.$playerPlaceholder[0],
             onDrop: this.attach,
           },
         })
 
         dragInteractable = result.drag
       } else {
+        this.$player.attr('style', this.playerOriginalStyle)
+
         removeDragArea()
         if (dragInteractable) {
           dragInteractable.unset()
@@ -338,28 +265,31 @@ const initPlugin = ({
 
     /*
       ---------------------------------------------------------------------------
+      detached
+      ---------------------------------------------------------------------------
+    */
+    get detachedOptions() {
+      const { orientation, position, ...options } = this.getOptions()
+      return { ...options, ...orientationOptions(orientation, position) }
+    }
+
+    /*
+      ---------------------------------------------------------------------------
       attach / detach
       ---------------------------------------------------------------------------
     */
     toggleDetach = (isDetached) => {
-      // ensure elements
-      this.initElements()
-
       this.setOptions({
         isDetached,
       })
       const isPlaying = this.currentContainer.isPlaying()
 
       this.updatePlayer(isDetached)
-      this.updateMiniPlayer(isDetached)
-      this.updateMainPlayer(isDetached)
 
       if (isDetached) {
-        this.movePlayerToMiniPlayer()
         this.clickToPausePlugin.disable()
         this.getOptions().onDetach()
       } else {
-        this.movePlayerToMainPlayer()
         this.clickToPausePlugin.enable()
         this.getOptions().onAttach()
       }
