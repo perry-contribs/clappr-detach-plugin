@@ -33,8 +33,7 @@
     "eslint-plugin-import": "^2.7.0",
     "html-loader": "0.4.3",
     "interact.js": "1.2.6",
-    "node-sass": "3.4.2",
-    "sass-loader": "3.2.0",
+    "lodash.assign": "^4.2.0",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1"
   },
@@ -46,8 +45,5 @@
     "plugins": [
       "babel-plugin-add-module-exports"
     ]
-  },
-  "dependencies": {
-    "lodash.assign": "^4.2.0"
   }
 }
