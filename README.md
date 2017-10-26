@@ -100,6 +100,8 @@ This table **doesn't** mean that other versions won't work together.
 
 It **does** means that we are sure that these versions work together.
 
-| clappr | detachPlugin |
-| --- | --- |
-| 0.2.73 | 0.1.0 |
+| clappr-detach-plugin | clappr       |
+| -------------------- | ------------ |
+| 0.3.0                | 0.2.73       |
+| 0.2.0                | 0.2.73       |
+| 0.1.0                | 0.2.73       |

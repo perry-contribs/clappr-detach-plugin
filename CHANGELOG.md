@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.0
+
+- adds `dragEnabled` option
+
 ## 0.2.0
 
 - change approach of detach, to do it using CSS
