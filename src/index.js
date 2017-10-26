@@ -18,6 +18,7 @@ const DEFAULT_POSITION = 10
 const DEFAULT_POSTER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
 
 const DEFAULT_OPTIONS = {
+  dragEnabled: true,
   isDetached: false,
   orientation: 'bottom-right',
   position: {
@@ -232,8 +233,8 @@ const initPlugin = ({
       this.$player.toggleClass('clappr-detach--is-detached', isDetached)
       this.$player[0].style.transform = 'translate(0, 0)'
 
+      const options = this.detachedOptions
       if (isDetached) {
-        const options = this.detachedOptions
         this.$player[0].style.opacity = `${options.opacity}`
         this.$player[0].style.left = `${options.left}px`
         this.$player[0].style.right = `${options.right}px`
@@ -242,23 +243,26 @@ const initPlugin = ({
         this.$player[0].style.setProperty('width', `${options.width}px`, 'important')
         this.$player[0].style.setProperty('height', `${options.height}px`, 'important')
 
-        const result = setupInteractions(this.$player[0], {
-          drag: {
-            dragArea: addDragArea(),
-          },
-          drop: {
-            dropAreaElement: this.$playerPlaceholder[0],
-            onDrop: this.attach,
-          },
-        })
+        if (options.dragEnabled) {
+          const result = setupInteractions(this.$player[0], {
+            drag: {
+              dragArea: addDragArea(),
+            },
+            drop: {
+              dropAreaElement: this.$playerPlaceholder[0],
+              onDrop: this.attach,
+            },
+          })
 
-        dragInteractable = result.drag
+          dragInteractable = result.drag
+        }
       } else {
         this.$player.attr('style', this.playerOriginalStyle)
-
-        removeDragArea()
-        if (dragInteractable) {
-          dragInteractable.unset()
+        if (options.dragEnabled) {
+          removeDragArea()
+          if (dragInteractable) {
+            dragInteractable.unset()
+          }
         }
       }
     }
