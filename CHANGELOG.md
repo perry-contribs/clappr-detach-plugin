@@ -1,8 +1,12 @@
 # CHANGELOG
 
-## 0.3.0
+## 0.4.0
 
 - adds `dragEnabled` option
+
+## 0.3.0
+
+Don't use this version, we messed up the publishing
 
 ## 0.2.0
 

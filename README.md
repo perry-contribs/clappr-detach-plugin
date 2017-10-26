@@ -104,6 +104,6 @@ It **does** means that we are sure that these versions work together.
 
 | clappr-detach-plugin | clappr       |
 | -------------------- | ------------ |
-| 0.3.0                | 0.2.73       |
+| 0.4.0                | 0.2.73       |
 | 0.2.0                | 0.2.73       |
 | 0.1.0                | 0.2.73       |
