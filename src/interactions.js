@@ -25,7 +25,9 @@ const onMove = (event) => {
   target.setAttribute('data-y', y)
 }
 
-const setupDrag = (element, { dragArea }) => interact(element)
+const setupDrag = (element, { dragArea }) => interact(element, {
+    ignoreFrom: '.bar-container',
+  })
   .draggable({
     enagle: true,
     inertia: true,
