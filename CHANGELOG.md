@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.1
+
+- prevent dragging when mouse over bars (seekbar and sound bar)
+
 ## 0.4.0
 
 - adds `dragEnabled` option
