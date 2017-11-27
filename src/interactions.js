@@ -27,9 +27,10 @@ const onMove = (event) => {
 
 const setupDrag = (element, { dragArea }) => interact(element, {
     ignoreFrom: '.bar-container',
+    styleCursor: false,
   })
   .draggable({
-    enagle: true,
+    enabled: true,
     inertia: true,
     autoScroll: false,
     restrict: {
