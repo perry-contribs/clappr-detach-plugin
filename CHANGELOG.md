@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.2
+
+- prevent mouse from becoming stuck in move style
+
 ## 0.4.1
 
 - prevent dragging when mouse over bars (seekbar and sound bar)
