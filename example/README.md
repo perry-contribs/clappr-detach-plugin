@@ -1,15 +1,37 @@
-# clappr-detach-plugin example
+# clappr-detach-plugin-example
 
-First go to the root of the project and run:
+An example project for [clappr-detach-plugin](https://github.com/rafaeleyng/clappr-detach-plugin)
+
+## install and run
 
 ```
-$ npm run build
+yarn
+yarn start
 ```
 
 or
 
 ```
-$ yarn build
+npm install
+npm start
 ```
 
-to generate the `dist` folder, then open `index.html` in the browser.
+## development mode
+
+If you want to develop `clappr-detach-plugin` on your machine and test your changes on this example, open 2 terminals and run:
+
+- on `clappr-detach-plugin` folder:
+
+  ```
+  yarn link
+  yarn watch
+  ```
+
+- on `clappr-detach-plugin/example` folder:
+
+  ```
+  yarn link clappr-detach-plugin
+  yarn start
+  ```
+
+  and open http://localhost:3000/
