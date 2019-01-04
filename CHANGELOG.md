@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.5
+
+- fix publish. Do not use version `0.4.4`
+
 ## 0.4.4
 
 - fix publish. Do not use version `0.4.3`

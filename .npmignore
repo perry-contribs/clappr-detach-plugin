@@ -1,2 +1,7 @@
-*
-!dist
+example
+src
+
+.editorconfig
+.eslintrc
+.nvmrc
+webpack.config.js

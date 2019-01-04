@@ -1,6 +1,6 @@
 {
   "name": "clappr-detach-plugin",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "A Clappr plugin to detach the video",
   "main": "./dist/clappr-detach-plugin.js",
   "scripts": {
