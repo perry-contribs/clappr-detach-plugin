@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.3
+
+- validate whether core is ready before toggling detach state
+
 ## 0.4.2
 
 - prevent mouse from becoming stuck in move style
