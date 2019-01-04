@@ -113,8 +113,9 @@ const initPlugin = ({
 
     // when this function is called, `this.core.options.detachOptions` was already changed by clappr,
     // so we can use the new value
+    // we have to verify the core first to not apply changes before the right moment
     onOptionsChange() {
-      this.toggleDetach(this.core.options.isDetached)
+      if (this.core.ready) { this.toggleDetach(this.core.options.isDetached) }
     }
 
     /*
