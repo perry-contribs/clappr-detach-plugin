@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.4
+
+- fix publish. Do not use version `0.4.3`
+
 ## 0.4.3
 
 - validate whether core is ready before toggling detach state
