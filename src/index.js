@@ -168,7 +168,8 @@ const initPlugin = ({
 
       // clean up any element that might conflict with the placeholder
       this.$playerContainer.find(this.className).remove()
-      this.$playerContainer.append(this.$playerPlaceholder[0])
+      const elementDetach = this.$playerPlaceholder.detach()
+      elementDetach.appendTo(this.$playerContainer)
 
       // save player original styles to reset back to it when needed
       this.playerOriginalStyle = this.$player.attr('style')
