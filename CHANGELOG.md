@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.6
+
+- adjust detach/attach of plugin
+
 ## 0.4.5
 
 - fix publish. Do not use version `0.4.4`
