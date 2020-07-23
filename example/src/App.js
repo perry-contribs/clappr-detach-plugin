@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import Clappr from 'clappr'
-import initClapprDetachPlugin from 'clappr-detach-plugin'
+import initClapprDetachPlugin from '@globocom/clappr-detach-plugin'
 
 class App extends Component {
   componentDidMount() {

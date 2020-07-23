@@ -1,8 +1,6 @@
-# Warning
-
-This plugin is being moved to https://www.npmjs.com/package/@globocom/clappr-detach-plugin
-
 # clappr-detach-plugin
+
+Note: this plugin was previously called `clappr-detach-plugin`, but has changed to `@globocom/clappr-detach-plugin`.
 
 A [Clappr](https://github.com/clappr/clappr) plugin to detach the video.
 
@@ -14,7 +12,7 @@ This project is a fork from https://github.com/team-767/clappr-detach-plugin. We
 ## Installation
 
 ```shell
-npm install -S clappr-detach-plugin
+npm install -S @globocom/clappr-detach-plugin
 ```
 
 ## Usage
@@ -23,7 +21,7 @@ To init the plugin you have to pass it the Clappr object. See bellow the compati
 
 ```
 import Clappr from 'clappr'
-import initClapprDetachPlugin from 'clappr-detach-plugin'
+import initClapprDetachPlugin from '@globocom/clappr-detach-plugin'
 
 const detachPlugin = initClapprDetachPlugin(Clappr)
 ```
@@ -34,7 +32,7 @@ Full example:
 
 ```javascript
 import Clappr from 'clappr'
-import initClapprDetachPlugin from 'clappr-detach-plugin'
+import initClapprDetachPlugin from '@globocom/clappr-detach-plugin'
 
 const player = new Clappr.Player({
   source: 'http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4',
@@ -63,7 +61,7 @@ player.configure({ isDetached: false })
 
 ```javascript
 import Clappr from 'clappr'
-import initClapprDetachPlugin from 'clappr-detach-plugin'
+import initClapprDetachPlugin from '@globocom/clappr-detach-plugin'
 
 const player = new Clappr.Player({
   source: 'http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4',

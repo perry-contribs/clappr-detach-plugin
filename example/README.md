@@ -1,6 +1,6 @@
 # clappr-detach-plugin-example
 
-An example project for [clappr-detach-plugin](https://github.com/rafaeleyng/clappr-detach-plugin)
+An example project for [clappr-detach-plugin](https://github.com/globocom/clappr-detach-plugin)
 
 ## install and run
 

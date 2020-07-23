@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.7
+
+- added scope to the package, so the name has changed from `clappr-detach-plugin` to `@globocom/clappr-detach-plugin`
+
 ## 0.4.6
 
 - adjust detach/attach of plugin
