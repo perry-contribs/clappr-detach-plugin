@@ -1,3 +1,7 @@
+# Warning
+
+This plugin is being moved to https://www.npmjs.com/package/@globocom/clappr-detach-plugin
+
 # clappr-detach-plugin
 
 A [Clappr](https://github.com/clappr/clappr) plugin to detach the video.
