@@ -88,7 +88,7 @@ const player = new Clappr.Player({
 
 | Property            | Type          | Description                                             | valid values                                                          |
 | ------------------- | ------------- | ------------------------------------------------------- | --------------------------------------------------------------------- |
-| dragEnabled         | bool          | wheter drag n drop of detached player should be enabled | -                                                                     |
+| dragEnabled         | bool          | whether drag n drop of detached player should be enabled | -                                                                     |
 | height              | number        | player height on detach                                 | -                                                                     |
 | isDetached          | bool          | whether you want to start the player detached           | -                                                                     |
 | onAttach            | function      | callback called when player attach on original place    | -                                                                     |
